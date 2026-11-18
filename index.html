@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="description" content="Elementa — an interactive periodic table: elements, atoms, isotopes, decay chains and games. / La tavola periodica interattiva: elementi, atomi, isotopi, decadimenti e giochi.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23ffc53d%22/%3E%3Ctext x=%2216%22 y=%2222%22 font-size=%2215%22 font-family=%22Arial%22 font-weight=%22bold%22 text-anchor=%22middle%22%3EEl%3C/text%3E%3C/svg%3E">
+<title>Elementa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="brand-mark">El</span><span class="brand-name">Elementa<span class="brand-sub" data-i18n="brandSub"></span></span></div>
+  <nav class="views" role="tablist">
+    <button class="view-btn active" data-view="table" data-i18n="nav.table"></button>
+    <button class="view-btn" data-view="nuclides" data-i18n="nav.nuclides"></button>
+    <button class="view-btn" data-view="play" data-i18n="nav.play"></button>
+  </nav>
+  <div class="search">
+    <input id="search" type="search" data-i18n-ph="search.ph" autocomplete="off" spellcheck="false">
+    <div id="search-results" class="search-results"></div>
+  </div>
+  <button id="lang-btn" class="icon-btn lang-btn" data-i18n-title="lang.title">EN</button>
+  <button id="theme-btn" class="icon-btn" data-i18n-title="theme.title">◐</button>
+</header>
+
+<main>
+  <!-- TABLE -->
+  <section id="view-table" class="view active">
+    <div id="table-vp" class="viewport">
+      <div id="world" class="world"></div>
+    </div>
+    <div class="dock">
+      <div class="dock-row">
+        <label class="sel">
+          <span class="sel-lab" data-i18n="dock.colour"></span>
+          <select id="color-mode"></select>
+        </label>
+        <div id="legend" class="legend"></div>
+      </div>
+      <div id="slider-row" class="dock-row slider-row" hidden>
+        <button id="slider-play" class="icon-btn small" aria-label="Play">▶</button>
+        <input id="slider" type="range">
+        <span id="slider-label" class="mono slider-label"></span>
+      </div>
+    </div>
+    <div class="zoom-ctl">
+      <button class="icon-btn" data-zoom="in" data-i18n-title="zoom.in">+</button>
+      <button class="icon-btn" data-zoom="out" data-i18n-title="zoom.out">−</button>
+      <button class="icon-btn" data-zoom="fit" data-i18n-title="zoom.fit">⤢</button>
+    </div>
+    <div id="game-bar" class="game-bar" hidden></div>
+  </section>
+
+  <!-- NUCLIDES -->
+  <section id="view-nuclides" class="view">
+    <div id="nuc-vp" class="viewport"><canvas id="nuc-canvas"></canvas></div>
+    <div class="dock">
+      <div class="dock-row">
+        <label class="sel"><span class="sel-lab" data-i18n="dock.colour"></span>
+          <select id="nuc-mode">
+            <option value="decay" data-i18n="nuc.byDecay"></option>
+            <option value="hl" data-i18n="nuc.byHL"></option>
+          </select>
+        </label>
+        <div id="nuc-legend" class="legend"></div>
+      </div>
+    </div>
+    <div class="nuc-hint" data-i18n="nuc.hint"></div>
+    <div class="zoom-ctl">
+      <button class="icon-btn" data-nzoom="in" data-i18n-title="zoom.in">+</button>
+      <button class="icon-btn" data-nzoom="out" data-i18n-title="zoom.out">−</button>
+      <button class="icon-btn" data-nzoom="fit" data-i18n-title="zoom.fit">⤢</button>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section id="view-play" class="view scroll">
+    <div class="play-wrap" id="play-root"></div>
+  </section>
+
+  <!-- DETAIL PANEL -->
+  <aside id="panel" class="panel" aria-hidden="true">
+    <div class="panel-grip" id="panel-grip"><span></span></div>
+    <div class="panel-head">
+      <button id="panel-back" class="icon-btn small" hidden data-i18n-title="panel.back">←</button>
+      <div id="panel-title" class="panel-title"></div>
+      <button id="panel-close" class="icon-btn small" data-i18n-title="panel.close">✕</button>
+    </div>
+    <nav id="panel-tabs" class="panel-tabs"></nav>
+    <div id="panel-body" class="panel-body"></div>
+  </aside>
+</main>
+
+<div id="toast" class="toast"></div>
+<canvas id="fx" class="fx"></canvas>
+
+<script src="core.js"></script>
+<script src="i18n.js"></script>
+<script src="atom.js"></script>
+<script src="table.js"></script>
+<script src="panel.js"></script>
+<script src="nuclides.js"></script>
+<script src="games.js"></script>
+<script src="main.js"></script>
+</body>
+</html>

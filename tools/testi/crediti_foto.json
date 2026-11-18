@@ -1,0 +1,592 @@
+{
+ "1": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/hydrogen.php"
+ },
+ "2": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/helium.php"
+ },
+ "3": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/lithium.php"
+ },
+ "4": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/beryllium.php"
+ },
+ "5": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/boron.php"
+ },
+ "6": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/carbon.php"
+ },
+ "7": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/nitrogen.php"
+ },
+ "8": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/oxygen.php"
+ },
+ "9": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/fluorine.php"
+ },
+ "10": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/neon.php"
+ },
+ "11": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/sodium.php"
+ },
+ "12": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/magnesium.php"
+ },
+ "13": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/aluminium.php"
+ },
+ "14": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/silicon.php"
+ },
+ "15": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/phosphorus.php"
+ },
+ "16": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/sulfur.php"
+ },
+ "17": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/chlorine.php"
+ },
+ "18": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/argon.php"
+ },
+ "19": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/potassium.php"
+ },
+ "20": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/calcium.php"
+ },
+ "21": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/scandium.php"
+ },
+ "22": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/titanium.php"
+ },
+ "23": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/vanadium.php"
+ },
+ "24": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/chromium.php"
+ },
+ "25": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/manganese.php"
+ },
+ "26": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/iron.php"
+ },
+ "27": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/cobalt.php"
+ },
+ "28": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/nickel.php"
+ },
+ "29": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/copper.php"
+ },
+ "30": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/zinc.php"
+ },
+ "31": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/gallium.php"
+ },
+ "32": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/germanium.php"
+ },
+ "33": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/arsenic.php"
+ },
+ "34": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/selenium.php"
+ },
+ "35": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/bromine.php"
+ },
+ "36": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/krypton.php"
+ },
+ "37": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/rubidium.php"
+ },
+ "38": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/strontium.php"
+ },
+ "39": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/yttrium.php"
+ },
+ "40": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/zirconium.php"
+ },
+ "41": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/niobium.php"
+ },
+ "42": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/molybdenum.php"
+ },
+ "43": {
+  "a": "images-of-elements.com",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/technetium.php"
+ },
+ "44": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/ruthenium.php"
+ },
+ "45": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/rhodium.php"
+ },
+ "46": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/palladium.php"
+ },
+ "47": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/silver.php"
+ },
+ "48": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/cadmium.php"
+ },
+ "49": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/indium.php"
+ },
+ "50": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/tin.php"
+ },
+ "51": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/antimony.php"
+ },
+ "52": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/tellurium.php"
+ },
+ "53": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/iodine.php"
+ },
+ "54": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/xenon.php"
+ },
+ "55": {
+  "a": "Dnn87 (Wikimedia Commons)",
+  "l": "CC BY-SA 3.0",
+  "lu": "https://creativecommons.org/licenses/by-sa/3.0/",
+  "src": "https://commons.wikimedia.org/wiki/File:Cesium.jpg"
+ },
+ "56": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/barium.php"
+ },
+ "57": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/lanthanum.php"
+ },
+ "58": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/cerium.php"
+ },
+ "59": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/praseodymium.php"
+ },
+ "60": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/neodymium.php"
+ },
+ "61": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/promethium.php"
+ },
+ "62": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/samarium.php"
+ },
+ "63": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/europium.php"
+ },
+ "64": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/gadolinium.php"
+ },
+ "65": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/terbium.php"
+ },
+ "66": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/dysprosium.php"
+ },
+ "67": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/holmium.php"
+ },
+ "68": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/erbium.php"
+ },
+ "69": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/thulium.php"
+ },
+ "70": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/ytterbium.php"
+ },
+ "71": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/lutetium.php"
+ },
+ "72": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/hafnium.php"
+ },
+ "73": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/tantalum.php"
+ },
+ "74": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/tungsten.php"
+ },
+ "75": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/rhenium.php"
+ },
+ "76": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/osmium.php"
+ },
+ "77": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/iridium.php"
+ },
+ "78": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/platinum.php"
+ },
+ "79": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/gold.php"
+ },
+ "80": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/mercury.php"
+ },
+ "81": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/thallium.php"
+ },
+ "82": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/lead.php"
+ },
+ "83": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/bismuth.php"
+ },
+ "84": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/polonium.php"
+ },
+ "85": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/astatine.php"
+ },
+ "86": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/radon.php"
+ },
+ "87": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/francium.php"
+ },
+ "92": {
+  "a": "images-of-elements.com",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/uranium.php"
+ },
+ "93": {
+  "a": "Los Alamos National Laboratory",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/neptunium.php"
+ },
+ "94": {
+  "a": "U.S. Department of Energy",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/plutonium.php"
+ },
+ "95": {
+  "a": "Bionerd",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/americium.php"
+ },
+ "97": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/berkelium.php",
+  "note": "source page credits a U.S. government lab (public domain); credited to the site to be safe / la pagina cita un laboratorio USA (pubblico dominio), per prudenza è attribuita al sito"
+ },
+ "98": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/californium.php",
+  "note": "source page credits a U.S. government lab (public domain); credited to the site to be safe / la pagina cita un laboratorio USA (pubblico dominio), per prudenza è attribuita al sito"
+ },
+ "99": {
+  "a": "U.S. Department of Energy",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/einsteinium.php"
+ },
+ "100": {
+  "a": "U.S. Department of Energy",
+  "l": "PD",
+  "lu": "",
+  "src": "https://images-of-elements.com/fermium.php"
+ },
+ "101": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/mendelevium.php"
+ },
+ "102": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/nobelium.php"
+ },
+ "103": {
+  "a": "Chemical Elements – A Virtual Museum (Jumk.de Webprojects)",
+  "l": "CC BY 3.0",
+  "lu": "https://creativecommons.org/licenses/by/3.0/",
+  "src": "https://images-of-elements.com/lawrencium.php"
+ }
+}
