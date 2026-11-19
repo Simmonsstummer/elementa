@@ -151,6 +151,7 @@ App.table = (() => {
     const M = COLOR_MODES[mode]; world.classList.toggle('numeric', M.type === 'num'); world.classList.toggle('photo', M.type === 'photo'); world.classList.toggle('strong', M.type === 'state' || M.type === 'block');
     const lg = $('#legend'); lg.innerHTML = ''; hiCat(null);
     $('#slider-row').hidden = !(mode === 'state' || mode === 'year');
+    if (mode !== 'year') $('#year-badge').hidden = true;
     App.E.forEach(e => { const tl = tiles[e.z]; tl.classList.remove('na', 'ghost'); tl.style.removeProperty('--tc'); tl.querySelector('.val').textContent = ''; });
     if (M.type === 'photo') {
       App.E.forEach(e => { const tl = tiles[e.z]; tl.style.setProperty('--c', catVar(e.sr)); if (e.img) tl.style.setProperty('--img', `url(img/${e.z}.jpg)`); else tl.classList.add('nophoto'); });
@@ -178,7 +179,7 @@ App.table = (() => {
       });
       const min = M.log ? 10 ** lo : lo, max = M.log ? 10 ** hi : hi;
       lg.appendChild(h('div', { class: 'lg-grad' }, `<span>${M.fmt(min)}</span><span class="bar" style="background:linear-gradient(90deg,${RAMP.join(',')})"></span><span>${M.fmt(max)} ${M.unit}</span>`));
-      if (mode === 'year') { setupSlider('year'); applyYear(); }
+      if (mode === 'year') { setupSlider('year'); shownYear = null; applyYear(); }
     }
   }
   function hiCat(k) {
@@ -198,33 +199,55 @@ App.table = (() => {
     if (s._kind === 'state') l.textContent = `${Math.round(K2C(temp))} °C · ${temp} K`;
     else { const n = App.E.filter(e => e.y <= year).length; l.textContent = `${year <= 1640 ? t('w.antiquity') : year} · ${t('slider.known', n)}`; }
   }
-  function applyYear() { App.E.forEach(e => tiles[e.z].classList.toggle('ghost', e.y > year)); label(); }
+  // shows only the elements known in the chosen year, with a big year badge
+  let shownYear = null, lastNew = [];
+  function applyYear() {
+    const prev = shownYear; shownYear = year;
+    const born = prev != null && year > prev ? App.E.filter(e => e.y > prev && e.y <= year) : [];
+    App.E.forEach(e => {
+      const tl = tiles[e.z]; tl.classList.toggle('ghost', e.y > year);
+      if (born.includes(e)) { tl.classList.remove('born'); void tl.offsetWidth; tl.classList.add('born'); }
+    });
+    if (born.length) lastNew = born.slice(-4);
+    else if (prev != null && year < prev) lastNew = lastNew.filter(e => e.y <= year);
+    label(); badge();
+  }
+  function badge() {
+    const b = $('#year-badge');
+    if (mode !== 'year' || gameOn) { b.hidden = true; return; }
+    const n = App.E.filter(e => e.y <= year).length;
+    b.hidden = false;
+    b.innerHTML = `<b>${year <= 1640 ? t('w.antiquity') : year}</b><span>${t('slider.known', n)} / 118</span>`
+      + (lastNew.length ? `<em>${lastNew.map(e => `<i style="--c:${catVar(e.sr)}">${e.s}</i> ${nm(e)}${e.y > 0 ? ` <small>${e.y}</small>` : ''}`).join('<br>')}</em>` : '');
+  }
   function stopPlay() { if (playing) { cancelAnimationFrame(playing); playing = null; } $('#slider-play').textContent = '▶'; }
   function play() {
     if (playing) return stopPlay();
     const s = $('#slider'); $('#slider-play').textContent = '❚❚';
-    if (+s.value >= +s.max) s.value = s.min;
-    let last = performance.now();
+    if (+s.value >= +s.max) { s.value = s.min; onSlider(+s.min); }
+    // the slider snaps to whole steps, so the animation keeps its own fractional position
+    let last = performance.now(), pos = +s.value;
+    const dur = s._kind === 'year' ? 18 : 10;
     const step = now => {
-      const dt = (now - last) / 1000; last = now;
-      const span = s.max - s.min; let v = +s.value + span * dt / (s._kind === 'year' ? 14 : 10);
-      if (v >= +s.max) { v = +s.max; }
-      s.value = v; s.dispatchEvent(new Event('input'));
-      if (v >= +s.max) return stopPlay();
+      const dt = Math.min(0.1, (now - last) / 1000); last = now;
+      pos = Math.min(+s.max, pos + (s.max - s.min) * dt / dur);
+      s.value = pos; onSlider(pos);
+      if (pos >= +s.max) return stopPlay();
       playing = requestAnimationFrame(step);
     };
     playing = requestAnimationFrame(step);
+  }
+  function onSlider(v) {
+    const s = $('#slider');
+    if (s._kind === 'state') { const nt = Math.round(v); if (nt !== temp) { temp = nt; recolorState(); } label(); }
+    else { const ny = Math.round(v); if (ny !== year || shownYear == null) { year = ny; applyYear(); } }
   }
 
   function init() {
     build();
     const cm = $('#color-mode');
     cm.addEventListener('change', () => setMode(cm.value));
-    $('#slider').addEventListener('input', ev => {
-      const s = ev.target;
-      if (s._kind === 'state') { temp = Math.round(+s.value); recolorState(); label(); }
-      else { year = Math.round(+s.value); applyYear(); }
-    });
+    $('#slider').addEventListener('input', ev => { stopPlay(); onSlider(+ev.target.value); });
     $('#slider-play').addEventListener('click', play);
     $$('[data-zoom]').forEach(b => b.addEventListener('click', () => {
       const r = vp.getBoundingClientRect(), k = b.dataset.zoom;
