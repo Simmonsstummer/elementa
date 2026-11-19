@@ -313,6 +313,14 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .lab-ws .bond line{stroke:var(--text);stroke-opacity:.72;stroke-width:4;stroke-linecap:round}
 .lab-ws .bond line.hit{stroke:transparent;stroke-width:24;stroke-opacity:1}
 .lab-ws .bond{cursor:pointer}
+.lab-ws .bond.ionic line:not(.hit){stroke-dasharray:3 6;stroke-width:3.5;stroke:#ffb020;stroke-opacity:.9}
+.lab-ws .chg circle{stroke:var(--surface2);stroke-width:1.5}
+.lab-ws .chg.pos circle{fill:#ff5f5f}.lab-ws .chg.neg circle{fill:#3d8bff}
+.lab-ws .chg text{fill:#fff;font:700 11px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.lab-warn{margin:10px 0 0;padding-left:18px;font-size:13.5px;line-height:1.5}
+.lab-warn li{margin:4px 0}
+.lab-warn li::marker{color:var(--bad)}
+.lab-ion{margin-top:10px}
 .lab-ws .bond:hover line:not(.hit){stroke:var(--bad)}
 .lab-ws .atom{cursor:grab}
 .lab-ws .atom>circle:not(.hand):not(.ring){stroke:rgba(0,0,0,.35);stroke-width:1}

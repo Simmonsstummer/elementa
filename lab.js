@@ -82,7 +82,7 @@ App.lab = (() => {
   const ZOF = { H: 1, C: 6, N: 7, O: 8, F: 9, Na: 11, P: 15, S: 16, Cl: 17, K: 19, Ca: 20 };
   const RAD = el => el === 'H' ? 17 : ['S', 'P', 'Cl', 'Na', 'K', 'Ca'].includes(el) ? 24 : 22;
   const MISSIONS = ['h2', 'o2', 'h2o', 'co2', 'ch4', 'nh3', 'hcl', 'n2', 'h2o2', 'cl2', 'c2h6', 'c2h4', 'c2h2', 'ch3oh', 'ethanol', 'nacl', 'ch2o',
-    'hcooh', 'h2s', 'naoh', 'kcl', 'acetic', 'acetone', 'urea', 'so2', 'cacl2', 'cao', 'c3h8', 'hf', 'f2', 'ipa', 'glycol', 'h2co3', 'nahco3',
+    'hcooh', 'h2s', 'naoh', 'kcl', 'caco3', 'acetic', 'acetone', 'urea', 'so2', 'cacl2', 'cao', 'c3h8', 'hf', 'f2', 'ipa', 'glycol', 'h2co3', 'nahco3', 'na2co3', 'caoh2',
     'naclo', 'chcl3', 'cfc12', 'glycine', 'glycerol', 'h2so4', 'h3po4', 'c4h10', 'c6h6'];
   const SUBS = '₀₁₂₃₄₅₆₇₈₉', sub = s => String(s).replace(/\d/g, d => SUBS[d]);
   let M = null, byId = {}, loading = null;
@@ -101,6 +101,21 @@ App.lab = (() => {
     });
   }
   const countKey = cnt => Object.keys(cnt).sort().map(k => k + cnt[k]).join('');
+  // Pauling electronegativity: decides ionic bonds, charges and the order of inorganic formulas
+  const EN = { H: 2.2, C: 2.55, N: 3.04, O: 3.44, F: 3.98, Na: 0.93, P: 2.19, S: 2.58, Cl: 3.16, K: 0.82, Ca: 1.0 };
+  const METAL = new Set(['Na', 'K', 'Ca']);
+  // formula as chemists write it: organic molecules in Hill order (C, H, then alphabetical);
+  // otherwise metals first, hydroxides as (OH), acids with H first (H₂SO₄, H₃PO₄), the rest from the least to the most electronegative
+  function formula(cnt) {
+    const ks = Object.keys(cnt), n = k => cnt[k] > 1 ? sub(cnt[k]) : '', byEN = (a, b) => EN[a] - EN[b];
+    const metals = ks.filter(k => METAL.has(k)).sort(byEN), rest = ks.filter(k => !METAL.has(k));
+    if (cnt.C && cnt.H && !metals.length) return hill(cnt);
+    if (ks.length === 2 && cnt.H && (cnt.N || cnt.P)) return (cnt.N ? 'N' + n('N') : 'P' + n('P')) + 'H' + n('H');   // NH₃, PH₃
+    let out = metals.map(k => k + n(k)).join('');
+    if (metals.length && rest.length === 2 && cnt.O && cnt.H && cnt.O === cnt.H) return out + (cnt.O > 1 ? '(OH)' + sub(cnt.O) : 'OH');
+    if (cnt.H && rest.length > 1) out += 'H' + n('H');
+    return out + rest.filter(k => !(k === 'H' && rest.length > 1)).sort(byEN).map(k => k + n(k)).join('');
+  }
   function hill(cnt) {
     let ks = Object.keys(cnt).sort();
     if (cnt.C) ks = ['C', ...(cnt.H ? ['H'] : []), ...ks.filter(k => k !== 'C' && k !== 'H')];
@@ -286,10 +301,57 @@ App.lab = (() => {
     };
     return go(0) ? map : null;
   }
+  const isIonic = b => METAL.has(atom(b.a).el) !== METAL.has(atom(b.b).el);
+  function charges() {   // in an ionic bond the metal gives its electrons to the other atom
+    const q = {};
+    S.bonds.forEach(b => {
+      if (!isIonic(b)) return;
+      const [m, n] = METAL.has(atom(b.a).el) ? [b.a, b.b] : [b.b, b.a];
+      q[m] = (q[m] || 0) + b.o; q[n] = (q[n] || 0) - b.o;
+    });
+    return q;
+  }
+  const chgTxt = c => (Math.abs(c) > 1 ? Math.abs(c) : '') + (c > 0 ? '+' : '−');
+  const supTxt = c => chgTxt(c).replace(/\d/g, d => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]).replace('+', '⁺').replace('−', '⁻');
+  // the hands add up, but real chemistry has more rules: reasons why a structure is unlikely
+  function warnings() {
+    const w = new Set(), nb = id => bondsOf(id).map(b => atom(other(b, id)));
+    S.bonds.forEach(b => {
+      const A = atom(b.a), B = atom(b.b);
+      if (METAL.has(A.el) && METAL.has(B.el)) w.add('metalMetal');
+      if ((METAL.has(A.el) && B.el === 'C') || (METAL.has(B.el) && A.el === 'C')) w.add('metalC');
+    });
+    S.atoms.forEach(a => {
+      const ns = nb(a.id);
+      if (a.el === 'O') {   // three or more oxygens in a row
+        const oN = ns.filter(x => x.el === 'O');
+        if (oN.length >= 2 || oN.some(x => nb(x.id).some(y => y.el === 'O' && y.id !== a.id))) w.add('oChain');
+      }
+      if (a.el === 'N' && ns.filter(x => x.el === 'N').length >= 2) w.add('nChain');
+      const base = { S: 2, P: 3 }[a.el];
+      if (base) {
+        const u = used(a.id), toEN = bondsOf(a.id).filter(b => ['O', 'F', 'Cl'].includes(atom(other(b, a.id)).el)).reduce((x, b) => x + b.o, 0);
+        if (u > base && toEN < u - base) w.add('hyper');
+      }
+    });
+    // small rings (not counting the ionic «rings» drawn around a metal)
+    S.bonds.forEach(b => {
+      const prev = new Map([[b.a, null]]), q = [b.a];
+      while (q.length) {
+        const x = q.shift(); if (x === b.b) break;
+        bondsOf(x).forEach(e => { if (e === b) return; const y = other(e, x); if (!prev.has(y)) { prev.set(y, x); q.push(y); } });
+      }
+      if (!prev.has(b.b)) return;
+      const ring = []; for (let x = b.b; x !== null; x = prev.get(x)) ring.push(x);
+      if (ring.length <= 4 && !ring.some(id => METAL.has(atom(id).el))) w.add(ring.length === 3 ? 'ring3' : 'ring4');
+    });
+    return [...w];
+  }
+
   function analyse() {
     if (!S.atoms.length) return { st: 'empty' };
     const cnt = {}; S.atoms.forEach(a => cnt[a.el] = (cnt[a.el] || 0) + 1);
-    const f = hill(cnt), free = S.atoms.reduce((s, a) => s + (done(a.id) ? 0 : Math.max(1, hands(a.id))), 0);
+    const f = formula(cnt), free = S.atoms.reduce((s, a) => s + (done(a.id) ? 0 : Math.max(1, hands(a.id))), 0);
     if (free) return { st: 'open', f, free };
     const parts = components();
     if (parts > 1) return { st: 'pieces', f, parts };
@@ -445,10 +507,11 @@ App.lab = (() => {
     let s = '<defs>' + PALETTE.map(el => `<radialGradient id="mg-${el}" cx="35%" cy="32%" r="75%"><stop offset="0" stop-color="${molShade(MCOL[el], 0.55)}"/><stop offset=".6" stop-color="${MCOL[el]}"/><stop offset="1" stop-color="${molShade(MCOL[el], -0.4)}"/></radialGradient>`).join('') + '</defs>';
     S.bonds.forEach((b, i) => {
       const A = atom(b.a), B = atom(b.b), dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1, nx = -dy / L * 7, ny = dx / L * 7;
-      s += `<g class="bond" data-b="${i}"><line class="hit" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`;
+      s += `<g class="bond${isIonic(b) ? ' ionic' : ''}" data-b="${i}"><line class="hit" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`;
       for (let j = 0; j < b.o; j++) { const k = j - (b.o - 1) / 2; s += `<line x1="${A.x + nx * k}" y1="${A.y + ny * k}" x2="${B.x + nx * k}" y2="${B.y + ny * k}"/>`; }
       s += '</g>';
     });
+    const Q = charges();
     [...S.atoms].sort((p, q) => (p.z || 0) - (q.z || 0)).forEach(a => {
       const dz = clamp((a.z || 0) / 90, -0.45, 0.45), r = RAD(a.el) * (1 + dz * 0.5), hd = hands(a.id), ok = done(a.id);
       let dots = '';
@@ -463,7 +526,7 @@ App.lab = (() => {
         dots = angs.map(ang => `<circle class="hand" cx="${a.x + Math.cos(ang) * (r + 8)}" cy="${a.y + Math.sin(ang) * (r + 8)}" r="4.2"/>`).join('');
       }
       s += `<g class="atom${S.sel === a.id ? ' sel' : ''}${dropOn === a.id ? ' drop' : ''}${ok ? ' ok' : ''}" data-a="${a.id}">${S.sel === a.id || dropOn === a.id ? `<circle class="ring" cx="${a.x}" cy="${a.y}" r="${r + 7}"/>` : ''}${dots}
-        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text></g>`;
+        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text>${Q[a.id] ? `<g class="chg ${Q[a.id] > 0 ? 'pos' : 'neg'}"><circle cx="${a.x + r * 0.78}" cy="${a.y - r * 0.78}" r="9"/><text x="${a.x + r * 0.78}" y="${a.y - r * 0.78 + 0.5}">${chgTxt(Q[a.id])}</text></g>` : ''}</g>`;
     });
     if (!S.atoms.length) s += `<text class="ws-empty" x="${svgSize.w / 2}" y="${svgSize.h / 2}">${t('lab.empty')}</text>`;
     svg.innerHTML = s;
@@ -515,6 +578,12 @@ App.lab = (() => {
     box.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { v.mode = b.dataset.mode; box.querySelectorAll('[data-mode]').forEach(x => x.classList.toggle('active', x === b)); });
     box.parentElement.querySelectorAll('[data-z]').forEach(c => c.onclick = () => App.panel.openElement(+c.dataset.z));
   }
+  function ionicNote() {
+    const Q = charges(), ions = Object.entries(Q).filter(([id]) => METAL.has(atom(+id).el));
+    if (!ions.length) return '';
+    const list = [...new Set(ions.map(([id, c]) => atom(+id).el + supTxt(c)))].join(', ');
+    return `<p class="note lab-ion">⚡ ${t('lab.ionLine', list)}</p>`;
+  }
   function renderSide(r = analyse()) {
     const side = $('#lab-side'); if (!side) return;
     const goal = mission(), al = album(), nb = buildable().length;
@@ -535,7 +604,10 @@ App.lab = (() => {
     } else {
       const msg = { empty: t('lab.start'), open: S.sel ? t('lab.selected', esc(nm(App.E[ZOF[atom(S.sel).el] - 1]))) : t('lab.free', r.free), pieces: t('lab.pieces', r.parts),
         unknown: t('lab.unknown'), isomer: r.m && t('lab.isomer', esc(mtx(r.m).n)) }[r.st];
-      st = `<div class="lab-status">${r.f ? `<div class="mol-f big">${r.f}</div>` : ''}<p>${msg}</p></div>`;
+      const wr = ['unknown', 'isomer'].includes(r.st) ? warnings() : [];
+      const msg2 = r.st === 'unknown' ? (wr.length ? t('lab.unlikely') : t('lab.unknown')) : msg;
+      st = `<div class="lab-status">${r.f ? `<div class="mol-f big">${r.f}</div>` : ''}<p>${msg2}</p>
+        ${wr.length ? `<ul class="lab-warn">${wr.map(k => `<li>${t('lab.w.' + k)}</li>`).join('')}</ul>` : ''}${ionicNote()}</div>`;
     }
     side.innerHTML = goalHTML + st + `<button class="btn lab-album-btn" id="lab-album">📖 ${t('lab.album')} <span class="mono">${al.filter(id => byId[id]).length}/${nb}</span></button>`;
     const h = $('#lab-hint'); if (h) h.onclick = ev => { ev.preventDefault(); renderSide.hint = goal.id; renderSide(r); };
@@ -583,5 +655,5 @@ App.lab = (() => {
   }
   function open() { load().then(shell).catch(() => toast('molecules.json?')); }
   function relang() { closeModal(); if (!M) return; if (view === 'album') albumView(); else shell(); }
-  return { open, preview, relang, isomorphic, graphOf, get M() { return M; }, get S() { return S; } };
+  return { _warn: () => warnings(), _formula: c => formula(c), open, preview, relang, isomorphic, graphOf, get M() { return M; }, get S() { return S; } };
 })();
