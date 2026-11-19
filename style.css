@@ -314,6 +314,10 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .lab-ws .bond line.hit{stroke:transparent;stroke-width:24;stroke-opacity:1}
 .lab-ws .bond{cursor:pointer}
 .lab-ws .bond.ionic line:not(.hit){stroke-dasharray:3 6;stroke-width:3.5;stroke:#ffb020;stroke-opacity:.9}
+.lab-ws .del{cursor:pointer}
+.lab-ws .del circle{fill:var(--bad);stroke:var(--surface2);stroke-width:2}
+.lab-ws .del text{fill:#fff;font:700 12px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.lab-tools .btn[disabled]{opacity:.45;cursor:default}
 .lab-ws .chg circle{stroke:var(--surface2);stroke-width:1.5}
 .lab-ws .chg.pos circle{fill:#ff5f5f}.lab-ws .chg.neg circle{fill:#3d8bff}
 .lab-ws .chg text{fill:#fff;font:700 11px var(--sans);text-anchor:middle;dominant-baseline:central;pointer-events:none}
@@ -334,7 +338,7 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .lab-ws .ring{fill:color-mix(in srgb,var(--accent) 18%,transparent);stroke:var(--accent);stroke-width:2.5;stroke-dasharray:5 4;animation:ring 6s linear infinite}
 @keyframes ring{to{stroke-dashoffset:-90}}
 .lab-ws .ws-empty{text-anchor:middle;fill:var(--muted);font-size:15px;font-family:var(--sans)}
-.lab-trash{position:absolute;right:12px;bottom:12px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--surface);border:2px dashed var(--line2);opacity:0;transition:.15s;pointer-events:none}
+.lab-trash{position:absolute;right:12px;bottom:12px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--surface);border:2px dashed var(--line2);opacity:.35;transition:.15s;pointer-events:none}
 .lab-trash.show{opacity:1}
 .lab-trash.hot{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 25%,var(--surface));transform:scale(1.15)}
 .lab-tools{position:absolute;left:10px;bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
@@ -376,6 +380,8 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
   .lab-ws{height:clamp(300px,52vh,520px)}
   .lab-pal{grid-template-columns:repeat(6,minmax(0,1fr))}
   .lab-tools .btn{padding:7px 10px;font-size:12.5px}
+  .lab-tools{position:static;margin-top:8px}
+  .lab-trash{top:12px;bottom:auto}
 }
 
 /* ---------- mobile ---------- */

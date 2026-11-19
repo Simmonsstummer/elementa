@@ -512,6 +512,7 @@ App.lab = (() => {
             <div class="lab-tools">
               <button class="btn" id="lab-h" title="${t('lab.addHTitle')}">+H ${t('lab.addH')}</button>
               <button class="btn" id="lab-undo">↶ ${t('lab.undo')}</button>
+              <button class="btn" id="lab-del" disabled>✕ ${t('lab.del')}</button>
               <button class="btn" id="lab-clear">${t('lab.clear')}</button>
             </div></div>
           <p class="note lab-how">${t('lab.how')}</p>
@@ -521,6 +522,7 @@ App.lab = (() => {
     $('#bk').onclick = () => App.game.hub();
     wirePalette();
     $('#lab-h').onclick = addHydrogens; $('#lab-undo').onclick = doUndo; $('#lab-clear').onclick = clearAll;
+    $('#lab-del').onclick = () => { if (S.sel) removeAtom(S.sel); };
     wireWs(); fitWs(); changed();
   }
   function fitWs() {
@@ -557,10 +559,11 @@ App.lab = (() => {
         dots = angs.map(ang => `<circle class="hand" cx="${a.x + Math.cos(ang) * (r + 8)}" cy="${a.y + Math.sin(ang) * (r + 8)}" r="4.2"/>`).join('');
       }
       s += `<g class="atom${S.sel === a.id ? ' sel' : ''}${dropOn === a.id ? ' drop' : ''}${ok ? ' ok' : ''}" data-a="${a.id}">${S.sel === a.id || dropOn === a.id ? `<circle class="ring" cx="${a.x}" cy="${a.y}" r="${r + 7}"/>` : ''}${dots}
-        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text>${Q[a.id] ? `<g class="chg ${Q[a.id] > 0 ? 'pos' : 'neg'}"><circle cx="${a.x + r * 0.78}" cy="${a.y - r * 0.78}" r="9"/><text x="${a.x + r * 0.78}" y="${a.y - r * 0.78 + 0.5}">${chgTxt(Q[a.id])}</text></g>` : ''}</g>`;
+        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text>${S.sel === a.id ? `<g class="del" data-del="${a.id}"><circle cx="${a.x - r * 0.85}" cy="${a.y - r * 0.85}" r="11"/><text x="${a.x - r * 0.85}" y="${a.y - r * 0.85 + 0.5}">✕</text></g>` : ''}${Q[a.id] ? `<g class="chg ${Q[a.id] > 0 ? 'pos' : 'neg'}"><circle cx="${a.x + r * 0.78}" cy="${a.y - r * 0.78}" r="9"/><text x="${a.x + r * 0.78}" y="${a.y - r * 0.78 + 0.5}">${chgTxt(Q[a.id])}</text></g>` : ''}</g>`;
     });
     if (!S.atoms.length) s += `<text class="ws-empty" x="${svgSize.w / 2}" y="${svgSize.h / 2}">${t('lab.empty')}</text>`;
     svg.innerHTML = s;
+    const del = $('#lab-del'); if (del) del.disabled = !S.sel;
   }
   function wireWs() {
     const svg = $('#lab-ws'), trash = $('#lab-trash');
@@ -568,7 +571,8 @@ App.lab = (() => {
     const pt = e => { const r = svg.getBoundingClientRect(); return { x: (e.clientX - r.left) * svgSize.w / r.width, y: (e.clientY - r.top) * svgSize.h / r.height }; };
     const overTrash = e => { const r = trash.getBoundingClientRect(); return e.clientX > r.left - 10 && e.clientX < r.right + 10 && e.clientY > r.top - 10 && e.clientY < r.bottom + 10; };
     svg.addEventListener('pointerdown', e => {
-      const ga = e.target.closest('[data-a]'), gb = e.target.closest('[data-b]');
+      const gd = e.target.closest('[data-del]'), ga = e.target.closest('[data-a]'), gb = e.target.closest('[data-b]');
+      if (gd) { removeAtom(+gd.dataset.del); return; }
       if (ga) {
         anim++;
         const a = atom(+ga.dataset.a), p = pt(e);
@@ -680,7 +684,11 @@ App.lab = (() => {
     d.querySelectorAll('[data-z]').forEach(c => c.addEventListener('click', closeModal));
   }
   function closeModal() { const d = $('#mol-modal'); if (d) d.remove(); }
-  addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+    // Delete / Backspace removes the selected atom (not while typing somewhere)
+    if ((e.key === 'Delete' || e.key === 'Backspace') && S.sel && $('#lab-ws') && !/INPUT|TEXTAREA/.test(document.activeElement.tagName)) { e.preventDefault(); removeAtom(S.sel); }
+  });
 
   // a famous molecule spinning on the game card in the hub
   function preview(cv) {

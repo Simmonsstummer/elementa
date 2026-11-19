@@ -70,7 +70,7 @@
   };
   addEventListener('hashchange', fromHash); fromHash();
   App.view = App.view || 'table';
-  if (matchMedia('(pointer: coarse)').matches && !store.get('hinted')) { setTimeout(() => toast(t('hint.touch'), 3500), 900); store.set('hinted', 1); }
+  if (matchMedia('(pointer: coarse)').matches && !store.get('hinted')) { setTimeout(() => { if (App.view === 'table') { toast(t('hint.touch'), 3500); store.set('hinted', 1); } }, 900); }
 
   // static texts in index.html (data-i18n, data-i18n-ph, data-i18n-title)
   function applyStatic() {
