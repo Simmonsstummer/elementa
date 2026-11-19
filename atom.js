@@ -51,15 +51,21 @@ class AtomView {
         if (this.labels) { ctx.fillStyle = muted; ctx.font = '600 10px JetBrains Mono, monospace'; ctx.textAlign = 'left'; ctx.fillText('KLMNOPQ'[i] + ' ' + this.sh[i], g.cx + r * 0.707 + 4, g.cy - r * 0.707 - 4); }
       });
     } else {
-      // nuvola: punti casuali distribuiti attorno ai livelli
+      // nuvola: un alone per ogni guscio, più denso dove ci sono più elettroni, più i punti dove «potrebbe» essere un elettrone
+      const light = document.documentElement.dataset.theme === 'light', col = light ? '0,120,200' : '76,195,255';
       g.radii.forEach((r, i) => {
-        const cnt = this.sh[i] * 34, sd = (g.maxR - g.rN) / (this.sh.length * 2.6 + 1);
-        ctx.fillStyle = ECOL;
+        const sd = (g.maxR - g.rN) / (this.sh.length * 2.6 + 1), r0 = Math.max(g.rN + 2, r - 2.6 * sd), r1 = r + 2.6 * sd;
+        const a = Math.min(light ? 0.42 : 0.5, (light ? 0.14 : 0.16) + 0.035 * this.sh[i]);
+        const gr = ctx.createRadialGradient(g.cx, g.cy, r0, g.cx, g.cy, r1), mid = clamp((r - r0) / (r1 - r0), 0.05, 0.95);
+        gr.addColorStop(0, `rgba(${col},0)`); gr.addColorStop(mid, `rgba(${col},${a})`); gr.addColorStop(1, `rgba(${col},0)`);
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(g.cx, g.cy, r1, 0, 6.283); ctx.arc(g.cx, g.cy, r0, 0, 6.283, true); ctx.fill();
+        const cnt = this.sh[i] * 40;
+        ctx.fillStyle = light ? '#0a7fd0' : ECOL;
         for (let k = 0; k < cnt; k++) {
-          const a = Math.random() * 6.283, u = (Math.random() + Math.random() + Math.random() - 1.5) * 1.6;
+          const an = Math.random() * 6.283, u = (Math.random() + Math.random() + Math.random() - 1.5) * 1.6;
           const rr = Math.max(g.rN + 3, r + u * sd);
-          ctx.globalAlpha = 0.18 + Math.random() * 0.25;
-          ctx.fillRect(g.cx + Math.cos(a) * rr, g.cy + Math.sin(a) * rr, 1.6, 1.6);
+          ctx.globalAlpha = 0.4 + Math.random() * 0.5;
+          ctx.beginPath(); ctx.arc(g.cx + Math.cos(an) * rr, g.cy + Math.sin(an) * rr, 1.5, 0, 6.283); ctx.fill();
         }
       });
       ctx.globalAlpha = 1;

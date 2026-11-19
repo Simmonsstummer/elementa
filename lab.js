@@ -6,7 +6,7 @@ const MCOL = { H: '#f4f4f4', C: '#50555f', N: '#3d6bff', O: '#ff3b3b', S: '#f5c5
 const MRAD = { H: 0.26, C: 0.38, N: 0.37, O: 0.36, F: 0.34, S: 0.46, P: 0.46, Cl: 0.45, Na: 0.52, K: 0.56, Ca: 0.52 };   // ball size (Å)
 const VDW = { H: 1.1, C: 1.7, N: 1.55, O: 1.52, F: 1.47, S: 1.8, P: 1.8, Cl: 1.75, Na: 2.0, K: 2.2, Ca: 2.0 };          // space-filling (Å)
 const molInk = el => ['H', 'S', 'F'].includes(el) ? '#1a1b1f' : '#fff';
-function shade(hex, k) {   // k > 0 lighter, k < 0 darker
+function molShade(hex, k) {   // k > 0 lighter, k < 0 darker
   const n = parseInt(hex.slice(1), 16), c = [n >> 16, n >> 8 & 255, n & 255].map(v => Math.round(k > 0 ? v + (255 - v) * k : v * (1 + k)));
   return `rgb(${c})`;
 }
@@ -58,12 +58,12 @@ class Mol3D {
         for (let j = 0; j < it.o; j++) {
           const off = (j - (it.o - 1) / 2) * gap, ox = nx * off, oy = ny * off, mx = (A.X + B.X) / 2 + ox, my = (A.Y + B.Y) / 2 + oy;
           c.lineCap = 'round'; c.lineWidth = it.o > 1 ? lw * 0.75 : lw;
-          c.strokeStyle = shade(MCOL[A.el], -0.25); c.beginPath(); c.moveTo(A.X + ox, A.Y + oy); c.lineTo(mx, my); c.stroke();
+          c.strokeStyle = molShade(MCOL[A.el], -0.25); c.beginPath(); c.moveTo(A.X + ox, A.Y + oy); c.lineTo(mx, my); c.stroke();
         }
       } else {
         const p = P[it.i], r = (space ? VDW[p.el] * 0.95 : MRAD[p.el]) * s * p.k, col = MCOL[p.el];
         const g = c.createRadialGradient(p.X - r * 0.35, p.Y - r * 0.4, r * 0.1, p.X, p.Y, r);
-        g.addColorStop(0, shade(col, 0.55)); g.addColorStop(0.55, col); g.addColorStop(1, shade(col, -0.45));
+        g.addColorStop(0, molShade(col, 0.55)); g.addColorStop(0.55, col); g.addColorStop(1, molShade(col, -0.45));
         c.fillStyle = g; c.beginPath(); c.arc(p.X, p.Y, r, 0, 7); c.fill();
         if (r > 9 && (!space || p.el !== 'H' || r > 14)) {
           c.fillStyle = molInk(p.el); c.globalAlpha = 0.85; c.font = `700 ${Math.min(18, r * 0.75) | 0}px Inter,system-ui,sans-serif`;
@@ -234,7 +234,7 @@ App.lab = (() => {
       }
       return false;
     };
-    return go(0);
+    return go(0) ? map : null;
   }
   function analyse() {
     if (!S.atoms.length) return { st: 'empty' };
@@ -246,16 +246,97 @@ App.lab = (() => {
     const idx = new Map(S.atoms.map((a, i) => [a.id, i]));
     const G = graphOf(S.atoms.map(a => a.el), S.bonds.map(b => [idx.get(b.a), idx.get(b.b), b.o]));
     const same = buildable().filter(m => m.key === countKey(cnt));
-    const hit = same.find(m => isomorphic(G, graphOf(m.atoms, m.bonds)));
-    if (hit) return { st: 'hit', f, m: hit };
+    for (const m of same) { const map = isomorphic(G, graphOf(m.atoms, m.bonds)); if (map) return { st: 'hit', f, m, map }; }
     return { st: same.length ? 'isomer' : 'unknown', f, m: same[0] };
   }
 
+  /* --- true shape: when a molecule is recognised the atoms move to a projection of its real 3D geometry --- */
+  const PX = 64;   // pixels per ångström on the bench
+  let shown = null, anim = 0;
+  function eig3(A) {   // eigenvectors of a symmetric 3×3 matrix (Jacobi), largest eigenvalue first
+    const a = A.map(r => [...r]), v = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    for (let it = 0; it < 30; it++) for (const [p, q] of [[0, 1], [0, 2], [1, 2]]) {
+      if (Math.abs(a[p][q]) < 1e-12) continue;
+      const th = 0.5 * Math.atan2(2 * a[p][q], a[q][q] - a[p][p]), c = Math.cos(th), sn = Math.sin(th);
+      for (let k = 0; k < 3; k++) { const x = a[k][p], y = a[k][q]; a[k][p] = c * x - sn * y; a[k][q] = sn * x + c * y; }
+      for (let k = 0; k < 3; k++) { const x = a[p][k], y = a[q][k]; a[p][k] = c * x - sn * y; a[q][k] = sn * x + c * y; }
+      for (let k = 0; k < 3; k++) { const x = v[k][p], y = v[k][q]; v[k][p] = c * x - sn * y; v[k][q] = sn * x + c * y; }
+    }
+    return [0, 1, 2].sort((i, j) => a[j][j] - a[i][i]).map(i => [v[0][i], v[1][i], v[2][i]]);
+  }
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const mul = (R, p) => R.map(r => r[0] * p[0] + r[1] * p[1] + r[2] * p[2]);
+  const mmul = (A, B) => A.map(r => [0, 1, 2].map(j => r[0] * B[0][j] + r[1] * B[1][j] + r[2] * B[2][j]));
+  function randRot(seed) {   // repeatable random rotation from a quaternion
+    let x = seed * 9301 + 49297; const rnd = () => (x = (x * 9301 + 49297) % 233280) / 233280;
+    const u1 = rnd(), u2 = rnd() * 2 * Math.PI, u3 = rnd() * 2 * Math.PI, a = Math.sqrt(1 - u1), b = Math.sqrt(u1);
+    const [qw, qx, qy, qz] = [a * Math.sin(u2), a * Math.cos(u2), b * Math.sin(u3), b * Math.cos(u3)];
+    return [[1 - 2 * (qy * qy + qz * qz), 2 * (qx * qy - qz * qw), 2 * (qx * qz + qy * qw)],
+      [2 * (qx * qy + qz * qw), 1 - 2 * (qx * qx + qz * qz), 2 * (qy * qz - qx * qw)],
+      [2 * (qx * qz - qy * qw), 2 * (qy * qz + qx * qw), 1 - 2 * (qx * qx + qy * qy)]];
+  }
+  // viewing direction: the skeleton (atoms other than H) seen face-on, tilted just enough that no atoms hide each other
+  const rotX = t => [[1, 0, 0], [0, Math.cos(t), -Math.sin(t)], [0, Math.sin(t), Math.cos(t)]];
+  const rotY = t => [[Math.cos(t), 0, Math.sin(t)], [0, 1, 0], [-Math.sin(t), 0, Math.cos(t)]];
+  function bestView(m) {
+    const P = m.atoms.map(([, x, y, z]) => [x, y, z]), n = P.length;
+    if (n < 3) return [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    const heavy = m.atoms.filter(a => a[0] !== 'H').length >= 3 ? P.filter((p, i) => m.atoms[i][0] !== 'H') : P;
+    const c = [0, 1, 2].map(k => heavy.reduce((s, p) => s + p[k], 0) / heavy.length);
+    const C = [0, 1, 2].map(i => [0, 1, 2].map(j => heavy.reduce((s, p) => s + (p[i] - c[i]) * (p[j] - c[j]), 0)));
+    const [e1, e2] = eig3(C), pca = [e1, e2, cross(e1, e2)];
+    const minDist = R => { const Q = P.map(p => mul(R, p)); let md = 9; for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) md = Math.min(md, Math.hypot(Q[i][0] - Q[j][0], Q[i][1] - Q[j][1])); return md; };
+    let best = null, bestTilt = 9, fallback = pca, fbScore = -1;
+    for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
+      const R = mmul(rotX(i * 0.07), mmul(rotY(j * 0.07), pca)), md = minDist(R), tilt = Math.hypot(i, j);
+      if (md >= 0.6 && tilt < bestTilt) { bestTilt = tilt; best = R; }
+      if (md > fbScore) { fbScore = md; fallback = R; }
+    }
+    if (best) return best;
+    for (let k = 1; k <= 120; k++) { const R = randRot(k), md = minDist(R); if (md > fbScore) { fbScore = md; fallback = R; } }
+    return fallback;
+  }
+  function snapShape(r) {
+    const m = r.m, idx = S.atoms.map((a, i) => i), R0 = bestView(m);
+    const Q = m.atoms.map(([, x, y, z]) => mul(R0, [x, y, z]));
+    // user atoms (y up) and their partners in the catalogue, both centred
+    const U = S.atoms.map(a => [a.x, -a.y]), T = idx.map(i => Q[r.map[i]]);
+    const uc = [0, 1].map(k => U.reduce((s, p) => s + p[k], 0) / U.length), tc = [0, 1, 2].map(k => T.reduce((s, p) => s + p[k], 0) / T.length);
+    const u = U.map(p => [p[0] - uc[0], p[1] - uc[1]]), tt = T.map(p => [p[0] - tc[0], p[1] - tc[1], p[2] - tc[2]]);
+    // turn (and if better, flip) the shape to look as much as possible like what was built
+    let bestR = null, bestErr = Infinity;
+    for (const flip of [1, -1]) {
+      const q = tt.map(p => [p[0], p[1] * flip]);
+      let sxx = 0, sxy = 0; q.forEach((p, i) => { sxx += p[0] * u[i][0] + p[1] * u[i][1]; sxy += p[0] * u[i][1] - p[1] * u[i][0]; });
+      const th = Math.atan2(sxy, sxx), c = Math.cos(th), sn = Math.sin(th);
+      const err = q.reduce((s, p, i) => s + (c * p[0] - sn * p[1] - u[i][0] / PX) ** 2 + (sn * p[0] + c * p[1] - u[i][1] / PX) ** 2, 0);
+      if (err < bestErr) { bestErr = err; bestR = mmul([[c, -sn, 0], [sn, c, 0], [0, 0, 1]], mmul([[1, 0, 0], [0, flip, 0], [0, 0, flip]], R0)); }
+    }
+    const V = m.atoms.map(([, x, y, z]) => mul(bestR, [x, y, z])), vc = [0, 1, 2].map(k => V.reduce((s, p) => s + p[k], 0) / V.length);
+    const W = V.map(p => [p[0] - vc[0], p[1] - vc[1], p[2] - vc[2]]);
+    // scale to fit the bench, then centre where the molecule already was
+    const ex = Math.max(...W.map(p => Math.abs(p[0]))), ey = Math.max(...W.map(p => Math.abs(p[1])));
+    const s = Math.min(PX, (svgSize.w / 2 - 34) / (ex || 1), (svgSize.h / 2 - 34) / (ey || 1));
+    const cx = clamp(uc[0], ex * s + 30, svgSize.w - ex * s - 30), cy = clamp(-uc[1], ey * s + 30, svgSize.h - ey * s - 30);
+    const to = S.atoms.map((a, i) => { const p = W[r.map[i]]; return { x: cx + p[0] * s, y: cy - p[1] * s, z: p[2] * s }; });
+    shown = { id: m.id, mol: { ...m, atoms: m.atoms.map(([el], i) => [el, ...W[i]]) } };
+    const from = S.atoms.map(a => ({ x: a.x, y: a.y, z: a.z || 0 })), t0 = performance.now(), tok = ++anim;
+    const step = now => {
+      if (tok !== anim || !$('#lab-ws')) return;
+      const k = Math.min(1, (now - t0) / 750), e = 1 - (1 - k) ** 3;
+      S.atoms.forEach((a, i) => { a.x = from[i].x + (to[i].x - from[i].x) * e; a.y = from[i].y + (to[i].y - from[i].y) * e; a.z = from[i].z + (to[i].z - from[i].z) * e; });
+      renderWs(); if (k < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
   function changed() {
-    renderWs();
+    anim++;
     const r = analyse(), key = r.st === 'hit' ? r.m.id : null;
+    if (!key) { shown = null; S.atoms.forEach(a => { a.z = 0; }); }
+    renderWs();
     const fresh = key && key !== last;
-    if (fresh) celebrate(r.m);
+    if (fresh) { snapShape(r); celebrate(r.m); }
     last = key; renderSide(r);
     // on phones the result card is below the bench: bring it into view
     if (fresh && innerWidth <= 820) setTimeout(() => { const sd = $('#lab-side'); if (sd) sd.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 700);
@@ -311,15 +392,15 @@ App.lab = (() => {
   }
   function renderWs() {
     const svg = $('#lab-ws'); if (!svg) return;
-    let s = '<defs>' + PALETTE.map(el => `<radialGradient id="mg-${el}" cx="35%" cy="32%" r="75%"><stop offset="0" stop-color="${shade(MCOL[el], 0.55)}"/><stop offset=".6" stop-color="${MCOL[el]}"/><stop offset="1" stop-color="${shade(MCOL[el], -0.4)}"/></radialGradient>`).join('') + '</defs>';
+    let s = '<defs>' + PALETTE.map(el => `<radialGradient id="mg-${el}" cx="35%" cy="32%" r="75%"><stop offset="0" stop-color="${molShade(MCOL[el], 0.55)}"/><stop offset=".6" stop-color="${MCOL[el]}"/><stop offset="1" stop-color="${molShade(MCOL[el], -0.4)}"/></radialGradient>`).join('') + '</defs>';
     S.bonds.forEach((b, i) => {
       const A = atom(b.a), B = atom(b.b), dx = B.x - A.x, dy = B.y - A.y, L = Math.hypot(dx, dy) || 1, nx = -dy / L * 7, ny = dx / L * 7;
       s += `<g class="bond" data-b="${i}"><line class="hit" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`;
       for (let j = 0; j < b.o; j++) { const k = j - (b.o - 1) / 2; s += `<line x1="${A.x + nx * k}" y1="${A.y + ny * k}" x2="${B.x + nx * k}" y2="${B.y + ny * k}"/>`; }
       s += '</g>';
     });
-    S.atoms.forEach(a => {
-      const r = RAD(a.el), hd = hands(a.id), ok = done(a.id);
+    [...S.atoms].sort((p, q) => (p.z || 0) - (q.z || 0)).forEach(a => {
+      const dz = clamp((a.z || 0) / 90, -0.45, 0.45), r = RAD(a.el) * (1 + dz * 0.5), hd = hands(a.id), ok = done(a.id);
       let dots = '';
       if (!ok && hd > 0) {
         const taken = bondsOf(a.id).map(b => { const o = atom(other(b, a.id)); return Math.atan2(o.y - a.y, o.x - a.x); });
@@ -332,7 +413,7 @@ App.lab = (() => {
         dots = angs.map(ang => `<circle class="hand" cx="${a.x + Math.cos(ang) * (r + 8)}" cy="${a.y + Math.sin(ang) * (r + 8)}" r="4.2"/>`).join('');
       }
       s += `<g class="atom${S.sel === a.id ? ' sel' : ''}${ok ? ' ok' : ''}" data-a="${a.id}">${S.sel === a.id ? `<circle class="ring" cx="${a.x}" cy="${a.y}" r="${r + 7}"/>` : ''}${dots}
-        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/><text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${a.el.length > 1 ? 15 : 17}">${a.el}</text></g>`;
+        <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text></g>`;
     });
     if (!S.atoms.length) s += `<text class="ws-empty" x="${svgSize.w / 2}" y="${svgSize.h / 2}">${t('lab.empty')}</text>`;
     svg.innerHTML = s;
@@ -345,6 +426,7 @@ App.lab = (() => {
     svg.addEventListener('pointerdown', e => {
       const ga = e.target.closest('[data-a]'), gb = e.target.closest('[data-b]');
       if (ga) {
+        anim++;
         const a = atom(+ga.dataset.a), p = pt(e);
         d = { id: a.id, sx: e.clientX, sy: e.clientY, ox: a.x - p.x, oy: a.y - p.y, moved: false };
         svg.setPointerCapture(e.pointerId);
@@ -377,8 +459,9 @@ App.lab = (() => {
   function viewerHTML(id) {
     return `<div class="mol-view"><canvas id="${id}"></canvas><span class="seg mol-mode"><button data-mode="ball" class="active">${t('lab.balls')}</button><button data-mode="space">${t('lab.space')}</button></span><span class="mol-tip">${t('lab.rotate')}</span></div>`;
   }
-  function wireViewer(box, m) {
+  function wireViewer(box, m, same) {
     const v = new Mol3D(box.querySelector('canvas'), m);
+    if (same) { v.yaw = 0; v.pitch = 0; v.auto = false; v.rest = performance.now(); }
     box.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { v.mode = b.dataset.mode; box.querySelectorAll('[data-mode]').forEach(x => x.classList.toggle('active', x === b)); });
     box.parentElement.querySelectorAll('[data-z]').forEach(c => c.onclick = () => App.panel.openElement(+c.dataset.z));
   }
@@ -397,7 +480,7 @@ App.lab = (() => {
     let st;
     if (r.st === 'hit') {
       const m = r.m;
-      st = `<div class="mol-card"><div class="mol-title"><span class="mol-f">${m.f}</span><h2>${esc(mtx(m).n)}</h2></div>${viewerHTML('lab-3d')}${infoHTML(m)}
+      st = `<div class="mol-card"><div class="mol-title"><span class="mol-f">${m.f}</span><h2>${esc(mtx(m).n)}</h2></div><p class="note lab-shape">${t('lab.shape')}</p>${viewerHTML('lab-3d')}${infoHTML(m)}
         <button class="btn primary" id="lab-again" style="margin-top:12px;width:100%">${t('lab.again')}</button></div>`;
     } else {
       const msg = { empty: t('lab.start'), open: S.sel ? t('lab.selected', esc(nm(App.E[ZOF[atom(S.sel).el] - 1]))) : t('lab.free', r.free), pieces: t('lab.pieces', r.parts),
@@ -409,7 +492,7 @@ App.lab = (() => {
     const sk = $('#lab-skip'); if (sk) sk.onclick = ev => { ev.preventDefault(); store.set('labMission', store.get('labMission', 0) + 1); renderSide(r); };
     const ag = $('#lab-again'); if (ag) ag.onclick = () => { snap(); S = { atoms: [], bonds: [], sel: null, next: S.next }; changed(); };
     $('#lab-album').onclick = albumView;
-    if (r.st === 'hit') wireViewer(side.querySelector('.mol-view'), r.m);
+    if (r.st === 'hit') { const own = shown && shown.id === r.m.id; wireViewer(side.querySelector('.mol-view'), own ? shown.mol : r.m, own); }
   }
 
   /* --- album --- */

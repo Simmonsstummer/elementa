@@ -311,6 +311,8 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .lab-ws .atom{cursor:grab}
 .lab-ws .atom>circle:not(.hand):not(.ring){stroke:rgba(0,0,0,.35);stroke-width:1}
 .lab-ws .atom text{text-anchor:middle;dominant-baseline:central;font-weight:700;font-family:var(--sans);pointer-events:none}
+.lab-ws .shade{fill:#000;pointer-events:none}
+.lab-shape{margin:-4px 0 10px}
 .lab-ws .hand{fill:var(--accent);stroke:var(--surface2);stroke-width:1.5}
 .lab-ws .ring{fill:color-mix(in srgb,var(--accent) 18%,transparent);stroke:var(--accent);stroke-width:2.5;stroke-dasharray:5 4;animation:ring 6s linear infinite}
 @keyframes ring{to{stroke-dashoffset:-90}}

@@ -4,7 +4,7 @@ Genera molecules.json da tools/molecole.py con RDKit (coordinate 3D).
     pip install rdkit
     python tools/build_molecules.py
 """
-import json, os, sys
+import json, math, os, sys
 from rdkit import Chem
 from rdkit.Chem import AllChem
 
@@ -20,6 +20,27 @@ COMMON = {'h2o': 'H2O', 'h2o2': 'H2O2', 'co2': 'CO2', 'h2co3': 'H2CO3', 'nh3': '
           'acetic': 'CH3COOH', 'urea': 'CO(NH2)2', 'so2': 'SO2', 'h2so4': 'H2SO4', 'h3po4': 'H3PO4',
           'nacl': 'NaCl', 'kcl': 'KCl', 'naoh': 'NaOH', 'naclo': 'NaClO', 'nahco3': 'NaHCO3',
           'cacl2': 'CaCl2', 'cao': 'CaO'}
+# Small molecules where the force field is unreliable: measured gas-phase geometry
+# (bond lengths in Å, angles in degrees; NIST CCCBDB / CRC Handbook). Atom order = RDKit order.
+# Piccole molecole dove il campo di forza non è affidabile: geometria sperimentale in fase gassosa.
+def _di(d): return [(-d / 2, 0, 0), (d / 2, 0, 0)]
+def _bent(r, ang, centre):  # X-A-X with A at index `centre`
+    a = math.radians(ang) / 2
+    xs = [(-r * math.sin(a), -r * math.cos(a), 0), (r * math.sin(a), -r * math.cos(a), 0)]
+    xs.insert(centre, (0, 0, 0))
+    return xs
+def _lin(*ds):  # atoms on a line, distances between neighbours
+    x, out = 0, [(0, 0, 0)]
+    for d in ds: x += d; out.append((x, 0, 0))
+    return out
+MEASURED = {
+    'h2': ('HH', _di(0.741)), 'o2': ('OO', _di(1.208)), 'n2': ('NN', _di(1.098)), 'cl2': ('ClCl', _di(1.988)),
+    'f2': ('FF', _di(1.412)), 'hcl': ('ClH', _di(1.275)), 'hf': ('FH', _di(0.917)),
+    'h2o': ('OHH', _bent(0.958, 104.48, 0)), 'h2s': ('SHH', _bent(1.336, 92.1, 0)),
+    'co2': ('OCO', _lin(1.160, 1.160)), 'so2': ('OSO', _bent(1.431, 119.3, 1)),
+    'nacl': ('NaCl', _di(2.361)), 'kcl': ('KCl', _di(2.667)), 'cao': ('CaO', _di(1.822)),
+    'cacl2': ('ClCaCl', _lin(2.483, 2.483)), 'naoh': ('NaOH', _lin(1.950, 0.958)),
+}
 SUB = str.maketrans('0123456789', '₀₁₂₃₄₅₆₇₈₉')
 
 
@@ -49,13 +70,16 @@ def build(mid, smi, kind):
     except Exception:
         pass
     conf = mol.GetConformer()
-    pts = [conf.GetAtomPosition(i) for i in range(mol.GetNumAtoms())]
-    cx = sum(q.x for q in pts) / len(pts); cy = sum(q.y for q in pts) / len(pts); cz = sum(q.z for q in pts) / len(pts)
+    pts = [tuple(conf.GetAtomPosition(i)) for i in range(mol.GetNumAtoms())]
+    syms = [a.GetSymbol() for a in mol.GetAtoms()]
+    if mid in MEASURED:
+        order, pts = MEASURED[mid]
+        assert ''.join(syms) == order, (mid, syms)
+    cx, cy, cz = (sum(q[k] for q in pts) / len(pts) for k in range(3))
     atoms, counts = [], {}
-    for a, q in zip(mol.GetAtoms(), pts):
-        s = a.GetSymbol()
+    for s, q in zip(syms, pts):
         counts[s] = counts.get(s, 0) + 1
-        atoms.append([s, round(q.x - cx, 2), round(q.y - cy, 2), round(q.z - cz, 2)])
+        atoms.append([s, round(q[0] - cx, 3), round(q[1] - cy, 3), round(q[2] - cz, 3)])
     if kind in 'bi':  # every atom must obey the game's valence rules
         tot = [0] * len(atoms)
         for i, j, o in bonds:

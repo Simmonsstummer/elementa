@@ -76,9 +76,9 @@ Proprietà fisiche e chimiche, configurazioni elettroniche e dati sugli isotopi 
 
 ### Molecules / Molecole (`molecules.json`)
 
-The molecule list, their SMILES strings and texts were written for Elementa (texts: CC BY 4.0, see `LICENSE-CONTENT.md`). The 3D atom coordinates were computed at build time with **RDKit** — https://www.rdkit.org — **BSD 3-Clause License** (ETKDG embedding and MMFF/UFF force-field optimisation). RDKit itself is not distributed with Elementa. Atom colours follow the conventional CPK scheme.
+The molecule list, their SMILES strings and texts were written for Elementa (texts: CC BY 4.0, see `LICENSE-CONTENT.md`). The 3D atom coordinates were computed at build time with **RDKit** — https://www.rdkit.org — **BSD 3-Clause License** (ETKDG embedding and MMFF/UFF force-field optimisation). For 16 small molecules (diatomics, H₂O, H₂S, CO₂, SO₂, NaOH, CaCl₂…) the measured gas-phase geometry is used instead (NIST CCCBDB / CRC Handbook values). RDKit itself is not distributed with Elementa. Atom colours follow the conventional CPK scheme.
 
-L'elenco delle molecole, le stringhe SMILES e i testi sono scritti per Elementa (testi CC BY 4.0). Le coordinate 3D degli atomi sono calcolate con **RDKit** (licenza BSD 3-Clause), usato solo per generare il file e non distribuito con l'app. I colori degli atomi seguono la convenzione CPK.
+L'elenco delle molecole, le stringhe SMILES e i testi sono scritti per Elementa (testi CC BY 4.0). Le coordinate 3D degli atomi sono calcolate con **RDKit** (licenza BSD 3-Clause), usato solo per generare il file e non distribuito con l'app; per 16 molecole piccole si usa la geometria sperimentale in fase gassosa (valori NIST CCCBDB / CRC Handbook). I colori degli atomi seguono la convenzione CPK.
 
 ## 3. Fonts / Caratteri
 
