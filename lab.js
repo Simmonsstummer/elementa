@@ -57,8 +57,10 @@ class Mol3D {
         const lw = Math.max(2, 0.13 * s * (A.k + B.k) / 2), gap = it.o > 1 ? lw * 1.35 : 0;
         for (let j = 0; j < it.o; j++) {
           const off = (j - (it.o - 1) / 2) * gap, ox = nx * off, oy = ny * off, mx = (A.X + B.X) / 2 + ox, my = (A.Y + B.Y) / 2 + oy;
-          c.lineCap = 'round'; c.lineWidth = it.o > 1 ? lw * 0.75 : lw;
+          const ion = ['Na', 'K', 'Ca'].includes(A.el) !== ['Na', 'K', 'Ca'].includes(B.el);   // ionic bonds dashed, as on the bench
+          c.lineCap = ion ? 'butt' : 'round'; c.lineWidth = it.o > 1 ? lw * 0.75 : lw; c.setLineDash(ion ? [lw * 0.7, lw * 0.8] : []);
           c.strokeStyle = molShade(MCOL[A.el], -0.25); c.beginPath(); c.moveTo(A.X + ox, A.Y + oy); c.lineTo(mx, my); c.stroke();
+          c.setLineDash([]);
         }
       } else {
         const p = P[it.i], r = (space ? VDW[p.el] * 0.95 : MRAD[p.el]) * s * p.k, col = MCOL[p.el];
@@ -352,14 +354,15 @@ App.lab = (() => {
     if (!S.atoms.length) return { st: 'empty' };
     const cnt = {}; S.atoms.forEach(a => cnt[a.el] = (cnt[a.el] || 0) + 1);
     const f = formula(cnt), free = S.atoms.reduce((s, a) => s + (done(a.id) ? 0 : Math.max(1, hands(a.id))), 0);
-    if (free) return { st: 'open', f, free };
+    const cands = buildable().filter(m => m.key === countKey(cnt));
+    if (free) return { st: 'open', f, free, cands };
     const parts = components();
-    if (parts > 1) return { st: 'pieces', f, parts };
+    if (parts > 1) return { st: 'pieces', f, parts, cands };
     const idx = new Map(S.atoms.map((a, i) => [a.id, i]));
     const G = graphOf(S.atoms.map(a => a.el), S.bonds.map(b => [idx.get(b.a), idx.get(b.b), b.o]));
     const same = buildable().filter(m => m.key === countKey(cnt));
     for (const m of same) { const map = isomorphic(G, graphOf(m.atoms, m.bonds)); if (map) return { st: 'hit', f, m, map }; }
-    return { st: same.length ? 'isomer' : 'unknown', f, m: same[0] };
+    return { st: same.length ? 'isomer' : 'unknown', f, m: same[0], cands: same };
   }
 
   /* --- true shape: when a molecule is recognised the atoms move to a projection of its real 3D geometry --- */
@@ -408,11 +411,12 @@ App.lab = (() => {
     for (let k = 1; k <= 120; k++) { const R = randRot(k), md = minDist(R); if (md > fbScore) { fbScore = md; fallback = R; } }
     return fallback;
   }
-  function snapShape(r) {
-    const m = r.m, idx = S.atoms.map((a, i) => i), R0 = bestView(m);
+  // where each bench atom goes if the molecule takes its real shape (map: bench index -> catalogue index)
+  function layout(m, map, R0 = bestView(m)) {
+    const idx = S.atoms.map((a, i) => i);
     const Q = m.atoms.map(([, x, y, z]) => mul(R0, [x, y, z]));
     // user atoms (y up) and their partners in the catalogue, both centred
-    const U = S.atoms.map(a => [a.x, -a.y]), T = idx.map(i => Q[r.map[i]]);
+    const U = S.atoms.map(a => [a.x, -a.y]), T = idx.map(i => Q[map[i]]);
     const uc = [0, 1].map(k => U.reduce((s, p) => s + p[k], 0) / U.length), tc = [0, 1, 2].map(k => T.reduce((s, p) => s + p[k], 0) / T.length);
     const u = U.map(p => [p[0] - uc[0], p[1] - uc[1]]), tt = T.map(p => [p[0] - tc[0], p[1] - tc[1], p[2] - tc[2]]);
     // turn (and if better, flip) the shape to look as much as possible like what was built
@@ -430,7 +434,11 @@ App.lab = (() => {
     const ex = Math.max(...W.map(p => Math.abs(p[0]))), ey = Math.max(...W.map(p => Math.abs(p[1])));
     const s = Math.min(PX, (svgSize.w / 2 - 34) / (ex || 1), (svgSize.h / 2 - 34) / (ey || 1));
     const cx = clamp(uc[0], ex * s + 30, svgSize.w - ex * s - 30), cy = clamp(-uc[1], ey * s + 30, svgSize.h - ey * s - 30);
-    const to = S.atoms.map((a, i) => { const p = W[r.map[i]]; return { x: cx + p[0] * s, y: cy - p[1] * s, z: p[2] * s }; });
+    const to = S.atoms.map((a, i) => { const p = W[map[i]]; return { x: cx + p[0] * s, y: cy - p[1] * s, z: p[2] * s }; });
+    return { to, W };
+  }
+  function snapShape(r) {
+    const m = r.m, { to, W } = layout(m, r.map);
     shown = { id: m.id, mol: { ...m, atoms: m.atoms.map(([el], i) => [el, ...W[i]]) } };
     const from = S.atoms.map(a => ({ x: a.x, y: a.y, z: a.z || 0 })), t0 = performance.now(), tok = ++anim;
     const step = now => {
@@ -442,13 +450,35 @@ App.lab = (() => {
     requestAnimationFrame(step);
   }
 
+  let helped = false;
+  function fixTo(m) {
+    if (!m || S.atoms.length !== m.atoms.length) return;
+    snap();
+    // pair each bench atom with a catalogue atom of the same element, the closest once the shapes are aligned
+    const R0 = bestView(m);
+    let map = (() => { const pools = {}; m.atoms.forEach(([el], j) => (pools[el] = pools[el] || []).push(j)); return S.atoms.map(a => pools[a.el].shift()); })();
+    for (let it = 0; it < 4; it++) {
+      const { to } = layout(m, map, R0), pos = []; map.forEach((j, i) => pos[j] = to[i]);
+      const next = new Array(S.atoms.length), taken = new Set();
+      const pairs = [];
+      S.atoms.forEach((a, i) => m.atoms.forEach(([el], j) => { if (el === a.el) pairs.push([Math.hypot(a.x - pos[j].x, a.y - pos[j].y), i, j]); }));
+      pairs.sort((p, q) => p[0] - q[0]).forEach(([, i, j]) => { if (next[i] === undefined && !taken.has(j)) { next[i] = j; taken.add(j); } });
+      map = next;
+    }
+    const inv = []; map.forEach((j, i) => inv[j] = S.atoms[i].id);
+    S.bonds = m.bonds.map(([a, b, o]) => ({ a: inv[a], b: inv[b], o }));
+    S.sel = null; helped = true; last = null;
+    changed();
+  }
+
   function changed() {
     anim++;
     const r = analyse(), key = r.st === 'hit' ? r.m.id : null;
     if (!key) { shown = null; S.atoms.forEach(a => { a.z = 0; }); }
     renderWs();
     const fresh = key && key !== last;
-    if (fresh) { snapShape(r); celebrate(r.m); }
+    if (fresh) { snapShape(r); celebrate(r.m, helped); }
+    helped = false;
     last = key; renderSide(r);
     // on phones the result card is below the bench: bring it into view
     if (fresh && innerWidth <= 820) setTimeout(() => { const sd = $('#lab-side'); if (sd) sd.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 700);
@@ -457,10 +487,11 @@ App.lab = (() => {
     const al = album(), i = store.get('labMission', 0);
     return target ? byId[target] : i < MISSIONS.length ? byId[MISSIONS[i]] : null;
   }
-  function celebrate(m) {
+  function celebrate(m, help) {
     const al = album(), isNew = !al.includes(m.id), goal = mission();
     if (isNew) store.set('molecules', [...al, m.id]);
     const r = $('#lab-ws').getBoundingClientRect();
+    if (help) { toast(t('lab.helped'), 3200); return; }   // shown, not built: the mission waits
     if (goal && goal.id === m.id) {
       if (target) target = null; else store.set('labMission', store.get('labMission', 0) + 1);
       confetti(r.left + r.width / 2, r.top + r.height / 2, 120); toast(t('lab.missionDone'), 2200);
@@ -603,17 +634,19 @@ App.lab = (() => {
         <button class="btn primary" id="lab-again" style="margin-top:12px;width:100%">${t('lab.again')}</button></div>`;
     } else {
       const msg = { empty: t('lab.start'), open: S.sel ? t('lab.selected', esc(nm(App.E[ZOF[atom(S.sel).el] - 1]))) : t('lab.free', r.free), pieces: t('lab.pieces', r.parts),
-        unknown: t('lab.unknown'), isomer: r.m && t('lab.isomer', esc(mtx(r.m).n)) }[r.st];
+        unknown: t('lab.unknown'), isomer: r.m && t('lab.isomer', `<a href="#" class="lab-fix-link" data-fix="${r.m.id}">${esc(mtx(r.m).n)}</a>`) }[r.st];
       const wr = ['unknown', 'isomer'].includes(r.st) ? warnings() : [];
       const msg2 = r.st === 'unknown' ? (wr.length ? t('lab.unlikely') : t('lab.unknown')) : msg;
       st = `<div class="lab-status">${r.f ? `<div class="mol-f big">${r.f}</div>` : ''}<p>${msg2}</p>
-        ${wr.length ? `<ul class="lab-warn">${wr.map(k => `<li>${t('lab.w.' + k)}</li>`).join('')}</ul>` : ''}${ionicNote()}</div>`;
+        ${wr.length ? `<ul class="lab-warn">${wr.map(k => `<li>${t('lab.w.' + k)}</li>`).join('')}</ul>` : ''}
+        ${r.cands && r.cands.length ? `<div class="lab-fix"><span>${t('lab.canMake')}</span>${r.cands.map(m => `<button class="btn lab-fix-btn" data-fix="${m.id}">✨ ${t('lab.fix', esc(mtx(m).n))}</button>`).join('')}</div>` : ''}${ionicNote()}</div>`;
     }
     side.innerHTML = goalHTML + st + `<button class="btn lab-album-btn" id="lab-album">📖 ${t('lab.album')} <span class="mono">${al.filter(id => byId[id]).length}/${nb}</span></button>`;
     const h = $('#lab-hint'); if (h) h.onclick = ev => { ev.preventDefault(); renderSide.hint = goal.id; renderSide(r); };
     const sk = $('#lab-skip'); if (sk) sk.onclick = ev => { ev.preventDefault(); store.set('labMission', store.get('labMission', 0) + 1); renderSide(r); };
     const ag = $('#lab-again'); if (ag) ag.onclick = () => { snap(); S = { atoms: [], bonds: [], sel: null, next: S.next }; changed(); };
     $('#lab-album').onclick = albumView;
+    $$('[data-fix]', side).forEach(b => b.onclick = ev => { ev.preventDefault(); fixTo(byId[b.dataset.fix]); });
     if (r.st === 'hit') { const own = shown && shown.id === r.m.id; wireViewer(side.querySelector('.mol-view'), own ? shown.mol : r.m, own); }
   }
 
