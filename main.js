@@ -9,6 +9,7 @@
   applyStatic();
 
   let data;
+  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => { });
   try { data = await (await fetch('elements.json')).json(); }
   catch (err) { document.body.insertAdjacentHTML('beforeend', `<p style="position:fixed;inset:45% 0 auto;text-align:center">${t('err.data')}</p>`); return; }
   App.E = data; data.forEach(e => App.bySym[e.s] = e);

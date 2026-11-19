@@ -52,6 +52,7 @@ Elementa runs in the browser, on desktop and phone, with nothing to install and 
 - **Molecule lab** – every atom has «hands» (its valence): join them into molecules and the lab recognises 46 common substances (water, salt, vinegar, kitchen gas, baking soda, limestone…), moves the atoms into the molecule's real shape (measured or computed geometry, seen from one side with depth), shows it in 3D with where it is found and what it is for, and collects it in an album. Ionic bonds are drawn dashed with the ions' charges, and when the hands add up but the structure is unlikely in reality (metals bonded together, chains of oxygens, strained rings…) the lab explains why. Missions grow step by step, «same atoms, different molecule» isomers are explained, and 13 famous molecules (caffeine, sugar, aspirin, vitamin C…) can be viewed in 3D.
 - **Games** – element hunt (3 levels), quiz with always-different questions (also about photos), build the atom with missions, your name in chemical symbols, time machine, fire and ice.
 - **Two languages** – Italian and English, switchable at any time with the IT/EN button (the first choice follows the browser language).
+- **Works offline** – it can be installed on a phone or computer like an app (PWA); after the first visit it works without a connection, photos included.
 
 ### Run it or put it on your website
 
@@ -81,6 +82,7 @@ Direct links: `#fe` opens iron (any symbol works), `#nuclides`, `#play` and `#la
 | `table.js` | periodic table and colour modes |
 | `panel.js` | element and isotope cards, half-life simulator |
 | `further.js` | «Learn more» links and the bridge to Strata |
+| `sw.js`, `manifest.webmanifest`, `icons/` | offline use and installation (PWA) |
 | `nuclides.js` | chart of nuclides |
 | `games.js` | games |
 | `lab.js` | molecule lab, 3D molecule viewer, album |
@@ -166,6 +168,7 @@ The texts were written with the help of an AI model and checked by hand on a sam
 - **Laboratorio delle molecole** – ogni atomo ha delle «mani» (la valenza): uniscili in molecole e il laboratorio riconosce 46 sostanze comuni (acqua, sale, aceto, gas dei fornelli, bicarbonato, calcare…), sistema gli atomi nella forma vera della molecola (geometria misurata o calcolata, vista di lato con la profondità), la mostra in 3D con dove si trova e a cosa serve e la raccoglie in un album. I legami ionici sono tratteggiati e mostrano le cariche degli ioni; se le mani tornano ma la struttura è improbabile nella realtà (metalli legati tra loro, catene di ossigeni, anelli troppo stretti…) il laboratorio spiega perché. Missioni a difficoltà crescente, spiegazione degli isomeri («stessi atomi, molecola diversa») e 13 molecole famose (caffeina, zucchero, aspirina, vitamina C…) da guardare in 3D.
 - **Giochi** – caccia all'elemento (3 livelli), quiz con domande sempre diverse (anche sulle foto), costruisci l'atomo con missioni, il tuo nome con i simboli chimici, macchina del tempo, fuoco e ghiaccio.
 - **Due lingue** – italiano e inglese, si cambia in qualsiasi momento con il pulsante IT/EN (la prima volta segue la lingua del browser).
+- **Funziona offline** – si può installare sul telefono o sul computer come un'app (PWA); dopo la prima visita funziona anche senza connessione, foto comprese.
 
 ### Metterlo sul proprio sito
 
