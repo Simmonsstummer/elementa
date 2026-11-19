@@ -119,29 +119,30 @@ App.table = (() => {
 
   // visible area not covered by the panel
   function freeRect() {
-    const r = vp.getBoundingClientRect(), p = $('#panel');
-    let w = r.width, hh = r.height;
+    const r = vp.getBoundingClientRect(), p = $('#panel'), hp = $('#helper');
+    let x = 0, w = r.width, hh = r.height;
     if (p.classList.contains('open')) { if (innerWidth > 820) w -= p.offsetWidth + 20; else hh -= p.offsetHeight - 10; }
-    return { w: Math.max(120, w), h: Math.max(120, hh) };
+    if (!hp.hidden) { if (innerWidth > 820) { x = hp.offsetWidth + 20; w -= x; } else hh -= hp.offsetHeight + 16; }
+    return { x, w: Math.max(120, w), h: Math.max(120, hh) };
   }
   function ensureVisible(z) {
     const e = App.E[z - 1], [x, y] = tilePos(e), fr = freeRect();
     const sx = pz.x + x * pz.s, sy = pz.y + y * pz.s, sz = 100 * pz.s;
-    if (sx < 10 || sy < 10 || sx + sz > fr.w - 10 || sy + sz > fr.h - 10) flyTo(z, Math.max(pz.s, 0.55));
+    if (sx < fr.x + 10 || sy < 10 || sx + sz > fr.x + fr.w - 10 || sy + sz > fr.h - 10) flyTo(z, Math.max(pz.s, 0.55));
   }
   function flyTo(z, s = pz.s) {
     const [x, y] = tilePos(App.E[z - 1]), fr = freeRect();
-    pz.animateTo(fr.w / 2 - (x + 50) * s, fr.h / 2 - (y + 50) * s, s);
+    pz.animateTo(fr.x + fr.w / 2 - (x + 50) * s, fr.h / 2 - (y + 50) * s, s);
   }
   function zoomTo(z) { flyTo(z, Math.max(2.6, pz.s * 1.6)); }
   function flyToRect(x, y, w, hh) {
     const fr = freeRect(); const s = clamp(Math.min((fr.w - 40) / w, (fr.h - 40) / hh), 0.15, 3);
-    pz.animateTo(fr.w / 2 - (x + w / 2) * s, fr.h / 2 - (y + hh / 2) * s, s);
+    pz.animateTo(fr.x + fr.w / 2 - (x + w / 2) * s, fr.h / 2 - (y + hh / 2) * s, s);
   }
   function fit(anim = true) {
     const fr = freeRect(), dock = $('#view-table .dock').offsetHeight + 20, top = gameOn ? 90 : 8;
     const s = clamp(Math.min((fr.w - 24) / WORLD_W, (fr.h - dock - top) / WORLD_H), 0.08, 1.2);
-    const x = (fr.w - WORLD_W * s) / 2, y = top + Math.max(0, (fr.h - dock - top - WORLD_H * s) / 2);
+    const x = fr.x + (fr.w - WORLD_W * s) / 2, y = top + Math.max(0, (fr.h - dock - top - WORLD_H * s) / 2);
     anim ? pz.animateTo(x, y, s) : pz.set(x, y, s);
   }
 
@@ -181,6 +182,40 @@ App.table = (() => {
       lg.appendChild(h('div', { class: 'lg-grad' }, `<span>${M.fmt(min)}</span><span class="bar" style="background:linear-gradient(90deg,${RAMP.join(',')})"></span><span>${M.fmt(max)} ${M.unit}</span>`));
       if (mode === 'year') { setupSlider('year'); shownYear = null; applyYear(); }
     }
+    helper();
+  }
+  /* ---------- side guide for the current colour mode ---------- */
+  let helpOn = store.get('helper', innerWidth > 820);
+  function trendSVG(tr) {
+    // small table outline with arrows showing the direction in which the value grows
+    let cells = '';
+    App.E.forEach(e => { if (e.g) cells += `<rect x="${(e.g - 1) * 9 + 22}" y="${(e.p - 1) * 9 + 4}" width="8" height="8" rx="1.5"/>`; });
+    const W = 22 + 18 * 9, H = 4 + 7 * 9, inc = t('help.inc');
+    const hx = tr.x > 0 ? `M26 ${H + 12} H${W - 6}` : `M${W - 6} ${H + 12} H26`;
+    const vy = tr.y > 0 ? `M10 ${H} V8` : `M10 8 V${H}`;
+    return `<svg class="trend" viewBox="0 0 ${W + 4} ${H + 30}"><g class="cells">${cells}</g>
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+      <path class="arr" d="${hx}" marker-end="url(#ah)"/><path class="arr" d="${vy}" marker-end="url(#ah)"/>
+      <text x="${(W + 22) / 2}" y="${H + 27}" text-anchor="middle">${inc} ${tr.x > 0 ? '→' : '←'}</text></svg>`;
+  }
+  function helper() {
+    const hp = $('#helper'), btn = $('#help-btn'), H = (HELP[App.lang] || HELP.it)[mode];
+    btn.classList.toggle('on', helpOn);
+    if (!helpOn || !H || gameOn) { hp.hidden = true; return; }
+    const M = COLOR_MODES[mode];
+    const sample = M.type === 'num' ? `<span class="bar" style="background:linear-gradient(90deg,${RAMP.join(',')})"></span>` : '';
+    hp.innerHTML = `<div class="hp-head"><span class="hp-lab">${t('help.label')} · ${t('cm.' + mode)}</span><button class="icon-btn small" id="hp-x" title="${t('help.close')}">✕</button></div>
+      <h3>${H.t}</h3>${H.p.map(x => `<p>${x}</p>`).join('')}
+      ${H.trend ? `<div class="hp-box"><b>${t('help.trend')}</b>${trendSVG(H.trend)}</div>` : ''}
+      <div class="hp-box"><b>${t('help.read')}</b>${sample}<p>${H.read}</p></div>
+      <div class="hp-box kid"><b>🧒 ${t('help.kid')}</b><p>${H.kid}</p></div>`;
+    hp.hidden = false;
+    if (innerWidth <= 820) hp.style.bottom = ($('#view-table .dock').offsetHeight + 18) + 'px'; else hp.style.bottom = '';
+    $('#hp-x').onclick = () => toggleHelp(false);
+  }
+  function toggleHelp(on = !helpOn) {
+    helpOn = on; store.set('helper', on); helper();
+    if (!sel) fit(); else ensureVisible(sel);
   }
   function hiCat(k) {
     const cur = world._hiCat; world._hiCat = (k && k !== cur) ? k : null;
@@ -249,6 +284,7 @@ App.table = (() => {
     cm.addEventListener('change', () => setMode(cm.value));
     $('#slider').addEventListener('input', ev => { stopPlay(); onSlider(+ev.target.value); });
     $('#slider-play').addEventListener('click', play);
+    $('#help-btn').addEventListener('click', ev => { ev.stopPropagation(); toggleHelp(); });
     $$('[data-zoom]').forEach(b => b.addEventListener('click', () => {
       const r = vp.getBoundingClientRect(), k = b.dataset.zoom;
       if (k === 'fit') fit(); else pz.zoomAt(r.width / 2, r.height / 2, k === 'in' ? 1.5 : 1 / 1.5);
@@ -278,6 +314,7 @@ App.table = (() => {
     gameOn = on; vp.classList.toggle('game', on);
     if (on) { setMode('cat'); select(null); lens(null); App.panel.close(); }
     App.E.forEach(e => tiles[e.z].classList.remove('hint', 'dim'));
+    helper();
   }
   function flash(z, ok) { const tl = tiles[z]; tl.classList.remove('flash-ok', 'flash-bad'); void tl.offsetWidth; tl.classList.add(ok ? 'flash-ok' : 'flash-bad'); }
   function hint(z, level) {

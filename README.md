@@ -36,6 +36,7 @@ Elementa runs in the browser, on desktop and phone, with nothing to install and 
 ### What's inside
 
 - **Explorable table** – drag to move, zoom with the mouse wheel or by pinching; the closer you zoom, the more details appear on each tile.
+- **A side guide** for every colour mode explains what you are looking at (what electronegativity is, why the table has s, p, d, f blocks…), with trend arrows and a tip for kids; it can be closed with the **?** button next to the menu.
 - **Colour modes** – category, sample photos, state of matter with a temperature slider, block, year of discovery (with an animated «time machine»), electronegativity, atomic radius, ionisation energy, density, melting point, crustal abundance, stability.
 - **A card for every element**
   - *Overview*: photo, fun fact, «you can find it in…», uses, where it is found, key data.
@@ -70,6 +71,7 @@ Direct links: `#fe` opens iron (any symbol works), `#nuclides` and `#play` open 
 |---|---|
 | `index.html`, `style.css` | page and style (light/dark theme) |
 | `i18n.js` | all interface texts, Italian and English |
+| `help.js` | side guide for each colour mode, Italian and English |
 | `core.js` | data helpers, number formatting, electron configuration, decays, pan/zoom |
 | `atom.js` | animated atom model |
 | `table.js` | periodic table and colour modes |
@@ -115,6 +117,7 @@ The texts were written with the help of an AI model and checked by hand on a sam
 ### Cosa contiene
 
 - **Tavola esplorabile** – si trascina, si zooma con la rotella o pizzicando; più ingrandisci, più dettagli compaiono sulle caselle.
+- **Guida laterale** per ogni modalità di colore: spiega cosa stai guardando (cos'è l'elettronegatività, perché la tavola ha i blocchi s, p, d, f…), con le frecce delle tendenze e un consiglio per i più piccoli; si chiude con il pulsante **?** accanto al menu.
 - **Modalità di colore** – categoria, foto dei campioni, stato fisico con cursore della temperatura, blocco, anno di scoperta (con «macchina del tempo» animata), elettronegatività, raggio atomico, ionizzazione, densità, punto di fusione, abbondanza, stabilità.
 - **Scheda di ogni elemento**
   - *Panoramica*: foto, curiosità, «Lo trovi in…», usi, dove si trova, dati principali.

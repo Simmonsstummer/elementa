@@ -15,6 +15,7 @@ const ord = n => App.lang === 'it' ? n + '°' : n + (n % 100 >= 11 && n % 100 <=
 const STR = {
   it: {
     subtitle: 'la tavola periodica da esplorare',
+    'help.toggle': 'Mostra o nascondi la guida', 'help.label': 'Guida', 'help.read': 'Come leggere i colori', 'help.trend': 'Come cambia nella tavola', 'help.inc': 'aumenta', 'help.kid': 'Per i più piccoli', 'help.close': 'Chiudi la guida',
     'foot.code': 'Codice', 'foot.texts': 'Testi', 'foot.photos': 'Foto e dati: crediti', 'foot.credits': 'Crediti', 'foot.repo': 'Codice sorgente su GitHub', 'foot.open': 'Progetto open source', brandSub: ' · la tavola periodica',
     'nav.table': 'Tavola', 'nav.nuclides': 'Nuclidi', 'nav.play': 'Gioca',
     'search.ph': 'Cerca: ferro, Au, 79…', 'lang.title': 'Switch to English', 'theme.title': 'Tema chiaro/scuro',
@@ -150,6 +151,7 @@ const STR = {
 
   en: {
     subtitle: 'the periodic table to explore',
+    'help.toggle': 'Show or hide the guide', 'help.label': 'Guide', 'help.read': 'How to read the colours', 'help.trend': 'How it changes across the table', 'help.inc': 'increases', 'help.kid': 'For young explorers', 'help.close': 'Close the guide',
     'foot.code': 'Code', 'foot.texts': 'Texts', 'foot.photos': 'Photos and data: credits', 'foot.credits': 'Credits', 'foot.repo': 'Source code on GitHub', 'foot.open': 'Open-source project', brandSub: ' · the periodic table',
     'nav.table': 'Table', 'nav.nuclides': 'Nuclides', 'nav.play': 'Play',
     'search.ph': 'Search: iron, Au, 79…', 'lang.title': 'Passa all\'italiano', 'theme.title': 'Light/dark theme',
