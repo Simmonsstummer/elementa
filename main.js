@@ -62,11 +62,11 @@
   inp.addEventListener('blur', () => setTimeout(() => res.classList.remove('open'), 150));
   addEventListener('keydown', ev => { if (ev.key === '/' && document.activeElement !== inp) { ev.preventDefault(); inp.focus(); } });
 
-  /* direct links: #fe opens iron; #table, #nuclides, #play (or #tavola, #nuclidi, #gioca) open a view */
-  const VIEWS = { tavola: 'table', table: 'table', nuclidi: 'nuclides', nuclides: 'nuclides', gioca: 'play', play: 'play' };
+  /* direct links: #fe opens iron; #table, #nuclides, #play, #lab (or #tavola, #nuclidi, #gioca, #laboratorio) open a view */
+  const VIEWS = { tavola: 'table', table: 'table', nuclidi: 'nuclides', nuclides: 'nuclides', gioca: 'play', play: 'play', lab: 'lab', laboratorio: 'lab' };
   const fromHash = () => {
     const s = location.hash.slice(1).toLowerCase(); const e = App.E.find(x => x.s.toLowerCase() === s);
-    if (e) go(e.z); else if (VIEWS[s]) { App.setView(VIEWS[s]); if (VIEWS[s] === 'play') App.game.hub(); }
+    if (e) go(e.z); else if (VIEWS[s] === 'lab') App.game.openLab(); else if (VIEWS[s]) { App.setView(VIEWS[s]); if (VIEWS[s] === 'play') App.game.hub(); }
   };
   addEventListener('hashchange', fromHash); fromHash();
   App.view = App.view || 'table';

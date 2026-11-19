@@ -285,6 +285,80 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .toast.show{opacity:1;transform:translate(-50%,0)}
 .fx{position:fixed;inset:0;pointer-events:none;z-index:70;width:100%;height:100%}
 
+/* ---------- molecule lab ---------- */
+@media (min-width:821px){.games .game-card.feat{grid-column:span 2;padding-right:44%}}
+.feat-mol{position:absolute;right:2%;top:50%;transform:translateY(-50%);width:40%;height:calc(100% - 16px);display:none;pointer-events:none}
+@media (min-width:821px){.feat-mol{display:block}}
+.game-card.feat{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 16%,var(--surface)),var(--surface) 60%);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.lab-head h1{font-size:30px;letter-spacing:-.03em;margin:0 0 6px}
+.lab-head p{color:var(--muted);margin:0 0 18px;font-size:14.5px;line-height:1.5;max-width:760px}
+.lab{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+.lab-main{min-width:0}
+.lab-pal{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:6px;margin-bottom:10px}
+.lab-el{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 5px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;transition:transform .12s,border-color .12s}
+.lab-el:hover{border-color:var(--accent);transform:translateY(-2px)}
+.lab-el:active{transform:scale(.94)}
+.lab-el b{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;font-size:14px;color:var(--mi);
+  background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--mc) 45%,#fff),var(--mc) 60%,color-mix(in srgb,var(--mc) 60%,#000));box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.lab-el .hands{font:9.5px var(--mono);color:var(--accent);letter-spacing:1px;line-height:1}
+.lab-ws-wrap{position:relative}
+.lab-ws{display:block;width:100%;height:clamp(360px,calc(100vh - 360px),640px);border-radius:18px;border:1px solid var(--line);touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle,var(--line) 1px,transparent 1.2px) 0 0/22px 22px,var(--surface2)}
+.lab-ws .bond line{stroke:var(--text);stroke-opacity:.72;stroke-width:4;stroke-linecap:round}
+.lab-ws .bond line.hit{stroke:transparent;stroke-width:24;stroke-opacity:1}
+.lab-ws .bond{cursor:pointer}
+.lab-ws .bond:hover line:not(.hit){stroke:var(--bad)}
+.lab-ws .atom{cursor:grab}
+.lab-ws .atom>circle:not(.hand):not(.ring){stroke:rgba(0,0,0,.35);stroke-width:1}
+.lab-ws .atom text{text-anchor:middle;dominant-baseline:central;font-weight:700;font-family:var(--sans);pointer-events:none}
+.lab-ws .hand{fill:var(--accent);stroke:var(--surface2);stroke-width:1.5}
+.lab-ws .ring{fill:color-mix(in srgb,var(--accent) 18%,transparent);stroke:var(--accent);stroke-width:2.5;stroke-dasharray:5 4;animation:ring 6s linear infinite}
+@keyframes ring{to{stroke-dashoffset:-90}}
+.lab-ws .ws-empty{text-anchor:middle;fill:var(--muted);font-size:15px;font-family:var(--sans)}
+.lab-trash{position:absolute;right:12px;bottom:12px;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;font-size:24px;background:var(--surface);border:2px dashed var(--line2);opacity:0;transition:.15s;pointer-events:none}
+.lab-trash.show{opacity:1}
+.lab-trash.hot{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 25%,var(--surface));transform:scale(1.15)}
+.lab-tools{position:absolute;left:10px;bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
+.lab-tools .btn{background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(6px)}
+.lab-how{max-width:760px}
+.lab-side{display:flex;flex-direction:column;gap:12px}
+.lab-goal-act{margin-top:4px;font-size:13px}
+.lab-goal-act a{color:var(--accent)}
+.lab-status{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px}
+.lab-status p{margin:0;font-size:14.5px;line-height:1.5}
+.mol-f{font:700 18px var(--mono);color:var(--accent)}
+.mol-f.big{font-size:28px;margin-bottom:6px}
+.mol-card{border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px}
+.mol-title h2{margin:2px 0 10px;font-size:22px;letter-spacing:-.02em}
+.mol-view{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--accent) 7%,var(--surface2)),var(--surface2) 70%)}
+.mol-view canvas{display:block;width:100%;aspect-ratio:1/1;cursor:grab;touch-action:none}
+.mol-mode{position:absolute;top:8px;left:8px}
+.mol-tip{position:absolute;bottom:7px;left:0;right:0;text-align:center;font-size:11px;color:var(--faint);pointer-events:none}
+.mol-facts p{margin:10px 0 0;font-size:14px;line-height:1.5}
+.mol-card .chips .chip,.mol-box .chips .chip{cursor:pointer;font:inherit;font-size:12px}
+.lab-album-btn{width:100%;padding:12px;display:flex;justify-content:center;gap:8px;align-items:center}
+.album-bar{display:flex;align-items:center;gap:12px;margin:0 0 16px;font-size:13px}
+.album-prog{flex:1;height:8px;border-radius:4px;background:var(--surface2);border:1px solid var(--line);overflow:hidden}
+.album-prog i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.mol-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.mol-tile{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--surface);cursor:pointer;transition:transform .12s,border-color .12s}
+.mol-tile:hover{transform:translateY(-2px);border-color:var(--accent)}
+.mol-tile .mol-n{font-size:13px;line-height:1.35}
+.mol-tile.locked{opacity:.55}
+.mol-tile.locked .mol-f{color:var(--muted)}
+.album-h{margin:30px 0 10px;font-size:20px}
+.mol-modal{position:fixed;inset:0;z-index:55;display:grid;place-items:center;padding:16px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+.mol-box{position:relative;width:100%;max-width:520px;max-height:calc(100vh - 32px);overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow)}
+.mol-x{position:absolute;top:12px;right:12px}
+@media (max-width:820px){
+  .lab{grid-template-columns:1fr}
+  .lab-head h1{font-size:24px}
+  .lab-head p{font-size:13.5px;margin-bottom:12px}
+  .lab-ws{height:clamp(300px,52vh,520px)}
+  .lab-pal{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .lab-tools .btn{padding:7px 10px;font-size:12.5px}
+}
+
 /* ---------- mobile ---------- */
 @media (max-width:820px){
   :root{--top:104px}

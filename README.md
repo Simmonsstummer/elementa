@@ -19,6 +19,8 @@ Elementa runs in the browser, on desktop and phone, with nothing to install and 
 | **Animated atom**, shells and orbitals / **Atomo animato**, gusci e orbitali | **Decay chain** of uranium-238 / **Catena di decadimento** dell'uranio-238 |
 | ![Chart of nuclides](docs/nuclides.jpg) | ![Games](docs/games.jpg) |
 | **Chart of nuclides**: 3,557 isotopes / **Carta dei nuclidi**: 3.557 isotopi | **Games** for kids and grown-ups / **Giochi** per grandi e piccoli |
+| ![Molecule lab: acetic acid built by hand](docs/lab.jpg) | ![Sucrose in 3D](docs/mol3d.jpg) |
+| **Molecule lab**: join atoms, discover the substance / **Laboratorio delle molecole**: unisci gli atomi, scopri la sostanza | **Molecules in 3D** and the album / **Molecole in 3D** e album |
 
 <p align="center">
   <img src="docs/name.jpg" alt="Your name in elements" width="62%">
@@ -46,6 +48,7 @@ Elementa runs in the browser, on desktop and phone, with nothing to install and 
   - *Data*: full physical and chemical properties.
 - **Isotope detail** – half-life with child-friendly comparisons, decay modes explained, the full decay chain (e.g. uranium-238 → lead-206) and a half-life simulator with 100 atoms.
 - **Chart of nuclides** – every known nucleus, zoomable, coloured by decay mode or half-life.
+- **Molecule lab** – every atom has «hands» (its valence): join them into molecules and the lab recognises 43 common substances (water, salt, vinegar, kitchen gas, baking soda…), shows them in 3D with where they are found and what they are for, and collects them in an album. Missions grow step by step, «same atoms, different molecule» isomers are explained, and 13 famous molecules (caffeine, sugar, aspirin, vitamin C…) can be viewed in 3D.
 - **Games** – element hunt (3 levels), quiz with always-different questions (also about photos), build the atom with missions, your name in chemical symbols, time machine, fire and ice.
 - **Two languages** – Italian and English, switchable at any time with the IT/EN button (the first choice follows the browser language).
 
@@ -63,7 +66,7 @@ and open http://localhost:8000.
 
 The public version runs on GitHub Pages from the `main` branch: every push to `main` updates https://simmonsstummer.github.io/elementa/.
 
-Direct links: `#fe` opens iron (any symbol works), `#nuclides` and `#play` open those views.
+Direct links: `#fe` opens iron (any symbol works), `#nuclides`, `#play` and `#lab` open those views.
 
 ### Files
 
@@ -78,10 +81,12 @@ Direct links: `#fe` opens iron (any symbol works), `#nuclides` and `#play` open 
 | `panel.js` | element and isotope cards, half-life simulator |
 | `nuclides.js` | chart of nuclides |
 | `games.js` | games |
+| `lab.js` | molecule lab, 3D molecule viewer, album |
 | `main.js` | startup, search, theme, language |
 | `elements.json` | generated data (do not edit by hand) |
+| `molecules.json` | generated molecules with 3D coordinates (do not edit by hand) |
 | `img/` | sample photos, with `img/CREDITS.md` |
-| `tools/` | scripts that rebuild `elements.json`, and the source texts |
+| `tools/` | scripts that rebuild `elements.json` and `molecules.json`, and the source texts |
 | `docs/` | screenshots for this README |
 
 ### Editing the texts or updating the data
@@ -101,6 +106,15 @@ python tools/build.py
 ```
 
 This regenerates `elements.json` and `img/CREDITS.md`.
+
+Molecules live in `tools/molecole.py` (SMILES, kind and texts in both languages). Their 3D shapes are computed with RDKit:
+
+```
+pip install rdkit
+python tools/build_molecules.py
+```
+
+The script checks that every buildable molecule follows the game's valence rules and writes `molecules.json`.
 
 ### Licenses
 
@@ -127,6 +141,7 @@ The texts were written with the help of an AI model and checked by hand on a sam
   - *Dati*: proprietà fisiche e chimiche complete.
 - **Dettaglio isotopo** – tempo di dimezzamento con paragoni comprensibili, decadimenti spiegati, catena di decadimento completa (es. uranio-238 → piombo-206) e simulatore del dimezzamento con 100 atomi.
 - **Carta dei nuclidi** – tutti i nuclei conosciuti, zoomabili, colorati per decadimento o per durata.
+- **Laboratorio delle molecole** – ogni atomo ha delle «mani» (la valenza): uniscili in molecole e il laboratorio riconosce 43 sostanze comuni (acqua, sale, aceto, gas dei fornelli, bicarbonato…), le mostra in 3D con dove si trovano e a cosa servono e le raccoglie in un album. Missioni a difficoltà crescente, spiegazione degli isomeri («stessi atomi, molecola diversa») e 13 molecole famose (caffeina, zucchero, aspirina, vitamina C…) da guardare in 3D.
 - **Giochi** – caccia all'elemento (3 livelli), quiz con domande sempre diverse (anche sulle foto), costruisci l'atomo con missioni, il tuo nome con i simboli chimici, macchina del tempo, fuoco e ghiaccio.
 - **Due lingue** – italiano e inglese, si cambia in qualsiasi momento con il pulsante IT/EN (la prima volta segue la lingua del browser).
 
@@ -144,7 +159,7 @@ e apri http://localhost:8000.
 
 La versione pubblica gira su GitHub Pages dal branch `main`: ogni push su `main` aggiorna https://simmonsstummer.github.io/elementa/.
 
-Link diretti: `#fe` apre il ferro (vale per ogni simbolo), `#nuclidi` e `#gioca` aprono quelle viste.
+Link diretti: `#fe` apre il ferro (vale per ogni simbolo), `#nuclidi`, `#gioca` e `#laboratorio` aprono quelle viste.
 
 ### Modificare i testi o aggiornare i dati
 
@@ -156,6 +171,15 @@ python tools/build.py
 ```
 
 che rigenera `elements.json` e `img/CREDITS.md`.
+
+Le molecole stanno in `tools/molecole.py` (SMILES, tipo e testi nelle due lingue); la forma 3D si calcola con RDKit:
+
+```
+pip install rdkit
+python tools/build_molecules.py
+```
+
+Lo script controlla che ogni molecola costruibile rispetti le regole delle «mani» del gioco e scrive `molecules.json`.
 
 ### Licenze
 

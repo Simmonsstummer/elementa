@@ -34,6 +34,8 @@ App.game = (() => {
     const best = store.get('best', {});
     root.innerHTML = `<div class="play-hero"><h1>${t('g.title')}</h1><p>${t('g.sub')}</p></div>
       <div class="games">
+        <div class="game-card feat" data-g="lab"><canvas class="feat-mol" aria-hidden="true"></canvas><div class="gi">🧪</div><h2>${t('lab.title')}</h2><p>${t('lab.card')}</p>
+          <div class="levels"><button class="btn primary" data-lab="1">${t('g.start')}</button></div><div class="best">${(store.get('molecules', []).length ? t('lab.album') + ': ' + store.get('molecules', []).length : '')}</div></div>
         <div class="game-card" data-g="hunt"><div class="gi">🔎</div><h2>${t('g.hunt')}</h2><p>${t('g.huntTxt')}</p>
           <div class="levels">${levelBtns('data-hunt')}</div>
           <div class="levels"><span class="muted" style="font-size:12.5px;align-self:center">${t('g.clue')}:</span><span class="seg" id="hunt-kind">${['name', 'symbol', 'clue'].map(k => `<button data-k="${k}" class="${huntKind === k ? 'active' : ''}">${t('g.kind.' + k)}</button>`).join('')}</span></div>
@@ -54,6 +56,8 @@ App.game = (() => {
     $$('[data-hunt]').forEach(b => b.onclick = ev => { ev.stopPropagation(); hunt.start(b.dataset.hunt, huntKind); });
     $$('[data-quiz]').forEach(b => b.onclick = ev => { ev.stopPropagation(); quiz.start(b.dataset.quiz); });
     $('[data-build]').onclick = ev => { ev.stopPropagation(); builder(); };
+    const fm = $('.feat-mol'); if (fm && innerWidth > 820) App.lab.preview(fm);
+    $('[data-lab]').onclick = ev => { ev.stopPropagation(); view = 'lab'; App.lab.open(); };
     $('[data-name]').onclick = ev => { ev.stopPropagation(); nameGame(); };
     $('[data-time]').onclick = ev => { ev.stopPropagation(); App.setView('table'); App.table.setMode('year'); const s = $('#slider'); s.value = s.min; s.dispatchEvent(new Event('input')); setTimeout(() => $('#slider-play').click(), 400); };
     $('[data-temp]').onclick = ev => { ev.stopPropagation(); App.setView('table'); App.table.setMode('state'); toast(t('g.tempToast'), 2600); };
@@ -256,8 +260,9 @@ App.game = (() => {
   // redraw the current screen in the new language
   function relang() {
     if (!$('#view-play').classList.contains('active')) { if (!bar.hidden && hunt.target) hunt.drawBar(); if (view === 'hub') hub(); return; }
-    if (view === 'build') builder(); else if (view === 'name') nameGame(); else if (view === 'quiz') { quiz.i = Math.max(0, quiz.i); quiz.ask(); } else hub();
+    if (view === 'lab') App.lab.relang(); else if (view === 'build') builder(); else if (view === 'name') nameGame(); else if (view === 'quiz') { quiz.i = Math.max(0, quiz.i); quiz.ask(); } else hub();
   }
 
-  return { hub, onTile: z => hunt.onTile(z), stopBuilder, relang };
+  const openLab = () => { view = 'lab'; App.lab.open(); };
+  return { hub, openLab, onTile: z => hunt.onTile(z), stopBuilder, relang };
 })();

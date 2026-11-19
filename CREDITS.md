@@ -74,6 +74,12 @@ mendeleev collects data from IUPAC, NIST, the CRC Handbook of Chemistry and Phys
 
 Proprietà fisiche e chimiche, configurazioni elettroniche e dati sugli isotopi sono estratti con la libreria Python **mendeleev** (licenza MIT), che raccoglie dati IUPAC, NIST, CRC Handbook e NUBASE.
 
+### Molecules / Molecole (`molecules.json`)
+
+The molecule list, their SMILES strings and texts were written for Elementa (texts: CC BY 4.0, see `LICENSE-CONTENT.md`). The 3D atom coordinates were computed at build time with **RDKit** — https://www.rdkit.org — **BSD 3-Clause License** (ETKDG embedding and MMFF/UFF force-field optimisation). RDKit itself is not distributed with Elementa. Atom colours follow the conventional CPK scheme.
+
+L'elenco delle molecole, le stringhe SMILES e i testi sono scritti per Elementa (testi CC BY 4.0). Le coordinate 3D degli atomi sono calcolate con **RDKit** (licenza BSD 3-Clause), usato solo per generare il file e non distribuito con l'app. I colori degli atomi seguono la convenzione CPK.
+
 ## 3. Fonts / Caratteri
 
 **Inter** (Rasmus Andersson) and **JetBrains Mono** (JetBrains), loaded from Google Fonts — [SIL Open Font License 1.1](https://openfontlicense.org).
