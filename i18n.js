@@ -14,7 +14,8 @@ const ord = n => App.lang === 'it' ? n + '°' : n + (n % 100 >= 11 && n % 100 <=
 
 const STR = {
   it: {
-    subtitle: 'la tavola periodica da esplorare', brandSub: ' · la tavola periodica',
+    subtitle: 'la tavola periodica da esplorare',
+    'foot.code': 'Codice', 'foot.texts': 'Testi', 'foot.photos': 'Foto e dati: crediti', 'foot.credits': 'Crediti', 'foot.repo': 'Codice sorgente su GitHub', 'foot.open': 'Progetto open source', brandSub: ' · la tavola periodica',
     'nav.table': 'Tavola', 'nav.nuclides': 'Nuclidi', 'nav.play': 'Gioca',
     'search.ph': 'Cerca: ferro, Au, 79…', 'lang.title': 'Switch to English', 'theme.title': 'Tema chiaro/scuro',
     'dock.colour': 'Colora per', 'zoom.in': 'Ingrandisci', 'zoom.out': 'Riduci', 'zoom.fit': 'Adatta allo schermo',
@@ -148,7 +149,8 @@ const STR = {
   },
 
   en: {
-    subtitle: 'the periodic table to explore', brandSub: ' · the periodic table',
+    subtitle: 'the periodic table to explore',
+    'foot.code': 'Code', 'foot.texts': 'Texts', 'foot.photos': 'Photos and data: credits', 'foot.credits': 'Credits', 'foot.repo': 'Source code on GitHub', 'foot.open': 'Open-source project', brandSub: ' · the periodic table',
     'nav.table': 'Table', 'nav.nuclides': 'Nuclides', 'nav.play': 'Play',
     'search.ph': 'Search: iron, Au, 79…', 'lang.title': 'Passa all\'italiano', 'theme.title': 'Light/dark theme',
     'dock.colour': 'Colour by', 'zoom.in': 'Zoom in', 'zoom.out': 'Zoom out', 'zoom.fit': 'Fit to screen',
