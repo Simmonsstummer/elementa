@@ -3,9 +3,31 @@
 **An interactive periodic table to explore, study and play with — in English and Italian.**
 **La tavola periodica interattiva da esplorare, studiare e con cui giocare — in italiano e in inglese.**
 
+### ▶ [Open Elementa / Apri Elementa — simmonsstummer.github.io/elementa](https://simmonsstummer.github.io/elementa/)
+
 Elementa runs in the browser, on desktop and phone, with nothing to install and no server-side code: it is made of static files only.
 
 [English](#english) · [Italiano](#italiano)
+
+![The explorable periodic table](docs/table.jpg)
+
+| | |
+|---|---|
+| ![Sample photos on every tile](docs/photos.jpg) | ![Element card with photo and «you can find it in…»](docs/card.jpg) |
+| **Sample photos** on every tile / **Foto dei campioni** su ogni casella | **Element card** / **Scheda dell'elemento** |
+| ![Animated atom and orbital diagram](docs/atom.jpg) | ![Uranium-238 decay chain down to lead-206](docs/decay.jpg) |
+| **Animated atom**, shells and orbitals / **Atomo animato**, gusci e orbitali | **Decay chain** of uranium-238 / **Catena di decadimento** dell'uranio-238 |
+| ![Chart of nuclides](docs/nuclides.jpg) | ![Games](docs/games.jpg) |
+| **Chart of nuclides**: 3,557 isotopes / **Carta dei nuclidi**: 3.557 isotopi | **Games** for kids and grown-ups / **Giochi** per grandi e piccoli |
+
+<p align="center">
+  <img src="docs/name.jpg" alt="Your name in elements" width="62%">
+  &nbsp;
+  <img src="docs/mobile.jpg" alt="Elementa on a phone, in Italian" width="30%">
+</p>
+<p align="center"><sub>«Your name in elements» · on a phone, in Italian / «Il tuo nome con gli elementi» · da telefono, in italiano</sub></p>
+
+<sub>The screenshots show sample photos credited in <a href="img/CREDITS.md">img/CREDITS.md</a> (mostly CC BY 3.0, images-of-elements.com). / Gli screenshot contengono foto accreditate in <a href="img/CREDITS.md">img/CREDITS.md</a>.</sub>
 
 ---
 
@@ -36,7 +58,9 @@ The app loads `elements.json` with `fetch`, so **it does not work by double-clic
 python -m http.server 8000
 ```
 
-and open http://localhost:8000. It also works on GitHub Pages (Settings → Pages → branch `main`, folder `/`).
+and open http://localhost:8000.
+
+The public version runs on GitHub Pages from the `main` branch: every push to `main` updates https://simmonsstummer.github.io/elementa/.
 
 Direct links: `#fe` opens iron (any symbol works), `#nuclides` and `#play` open those views.
 
@@ -56,6 +80,7 @@ Direct links: `#fe` opens iron (any symbol works), `#nuclides` and `#play` open 
 | `elements.json` | generated data (do not edit by hand) |
 | `img/` | sample photos, with `img/CREDITS.md` |
 | `tools/` | scripts that rebuild `elements.json`, and the source texts |
+| `docs/` | screenshots for this README |
 
 ### Editing the texts or updating the data
 
@@ -112,7 +137,9 @@ L'app carica `elements.json` con `fetch`, quindi **non funziona aprendo `index.h
 python -m http.server 8000
 ```
 
-e apri http://localhost:8000. Funziona anche su GitHub Pages (Settings → Pages → branch `main`, cartella `/`).
+e apri http://localhost:8000.
+
+La versione pubblica gira su GitHub Pages dal branch `main`: ogni push su `main` aggiorna https://simmonsstummer.github.io/elementa/.
 
 Link diretti: `#fe` apre il ferro (vale per ogni simbolo), `#nuclidi` e `#gioca` aprono quelle viste.
 
