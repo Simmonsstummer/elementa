@@ -46,6 +46,7 @@ Elementa runs in the browser, on desktop and phone, with nothing to install and 
   - *Isotopes*: all 3,557 known isotopes with half-life, natural abundance and decay modes.
   - *History*: discoverers, place, origin of the name, position on the timeline.
   - *Data*: full physical and chemical properties.
+  - *Learn more*: links to Wikipedia (Italian and English), the Royal Society of Chemistry periodic table, PubChem, Theodore Gray's photos of real samples and Periodic Videos; for the elements that tell a story in Earth's history (uranium, lead, zircon, iridium, iron, oxygen, carbon, salt…), a short note and a link to the matching card in [Strata](https://simmonsstummer.github.io/strata/), the geologic time scale of the same series.
 - **Isotope detail** – half-life with child-friendly comparisons, decay modes explained, the full decay chain (e.g. uranium-238 → lead-206) and a half-life simulator with 100 atoms.
 - **Chart of nuclides** – every known nucleus, zoomable, coloured by decay mode or half-life.
 - **Molecule lab** – every atom has «hands» (its valence): join them into molecules and the lab recognises 46 common substances (water, salt, vinegar, kitchen gas, baking soda, limestone…), moves the atoms into the molecule's real shape (measured or computed geometry, seen from one side with depth), shows it in 3D with where it is found and what it is for, and collects it in an album. Ionic bonds are drawn dashed with the ions' charges, and when the hands add up but the structure is unlikely in reality (metals bonded together, chains of oxygens, strained rings…) the lab explains why. Missions grow step by step, «same atoms, different molecule» isomers are explained, and 13 famous molecules (caffeine, sugar, aspirin, vitamin C…) can be viewed in 3D.
@@ -79,6 +80,7 @@ Direct links: `#fe` opens iron (any symbol works), `#nuclides`, `#play` and `#la
 | `atom.js` | animated atom model |
 | `table.js` | periodic table and colour modes |
 | `panel.js` | element and isotope cards, half-life simulator |
+| `further.js` | «Learn more» links and the bridge to Strata |
 | `nuclides.js` | chart of nuclides |
 | `games.js` | games |
 | `lab.js` | molecule lab, 3D molecule viewer, album |
@@ -116,6 +118,25 @@ python tools/build_molecules.py
 
 The script checks that every buildable molecule follows the game's valence rules and writes `molecules.json`.
 
+### Learn more
+
+**Books**
+- Primo Levi, *Il sistema periodico* (1975) — en.: *The Periodic Table*
+- Oliver Sacks, *Uncle Tungsten* (2001) — it.: *Zio Tungsteno*
+- Sam Kean, *The Disappearing Spoon* (2010) — it.: *Il cucchiaino scomparso*
+- Eric Scerri, *The Periodic Table: A Very Short Introduction* (2nd ed. 2019)
+- Theodore Gray, *The Elements: A Visual Exploration of Every Known Atom in the Universe* (2009)
+- Hugh Aldersey-Williams, *Periodic Tales* (2011)
+
+**Online**
+- IUPAC — Periodic Table of Elements: https://iupac.org/what-we-do/periodic-table-of-elements/
+- Royal Society of Chemistry — Periodic Table: https://periodic-table.rsc.org/
+- PubChem (NIH) — Periodic Table: https://pubchem.ncbi.nlm.nih.gov/periodic-table/
+- Periodic Videos (University of Nottingham): https://www.youtube.com/@periodicvideos
+- Theodore Gray — Periodic Table of real samples: https://theodoregray.com/PeriodicTable/
+
+**From the same series**: [Strata](https://simmonsstummer.github.io/strata/) — the geologic time scale to explore ([source](https://github.com/Simmonsstummer/strata)).
+
 ### Licenses
 
 - **Code**: MIT — see [`LICENSE`](LICENSE).
@@ -139,6 +160,7 @@ The texts were written with the help of an AI model and checked by hand on a sam
   - *Isotopi*: tutti i 3.557 isotopi noti con durata, abbondanza naturale e modi di decadimento.
   - *Storia*: scopritori, luogo, origine del nome, posizione sulla linea del tempo.
   - *Dati*: proprietà fisiche e chimiche complete.
+  - *Per approfondire*: link a Wikipedia (italiano e inglese), alla tavola periodica della Royal Society of Chemistry, a PubChem, alle foto di campioni reali di Theodore Gray e a Periodic Videos; per gli elementi che raccontano la storia della Terra (uranio, piombo, zircone, iridio, ferro, ossigeno, carbonio, sale…) una breve nota e il link alla scheda corrispondente in [Strata](https://simmonsstummer.github.io/strata/), la scala del tempo geologico della stessa serie.
 - **Dettaglio isotopo** – tempo di dimezzamento con paragoni comprensibili, decadimenti spiegati, catena di decadimento completa (es. uranio-238 → piombo-206) e simulatore del dimezzamento con 100 atomi.
 - **Carta dei nuclidi** – tutti i nuclei conosciuti, zoomabili, colorati per decadimento o per durata.
 - **Laboratorio delle molecole** – ogni atomo ha delle «mani» (la valenza): uniscili in molecole e il laboratorio riconosce 46 sostanze comuni (acqua, sale, aceto, gas dei fornelli, bicarbonato, calcare…), sistema gli atomi nella forma vera della molecola (geometria misurata o calcolata, vista di lato con la profondità), la mostra in 3D con dove si trova e a cosa serve e la raccoglie in un album. I legami ionici sono tratteggiati e mostrano le cariche degli ioni; se le mani tornano ma la struttura è improbabile nella realtà (metalli legati tra loro, catene di ossigeni, anelli troppo stretti…) il laboratorio spiega perché. Missioni a difficoltà crescente, spiegazione degli isomeri («stessi atomi, molecola diversa») e 13 molecole famose (caffeina, zucchero, aspirina, vitamina C…) da guardare in 3D.
@@ -180,6 +202,25 @@ python tools/build_molecules.py
 ```
 
 Lo script controlla che ogni molecola costruibile rispetti le regole delle «mani» del gioco e scrive `molecules.json`.
+
+### Per approfondire
+
+**Libri**
+- Primo Levi, *Il sistema periodico* (1975)
+- Oliver Sacks, *Uncle Tungsten* (2001) — it.: *Zio Tungsteno*
+- Sam Kean, *The Disappearing Spoon* (2010) — it.: *Il cucchiaino scomparso*
+- Eric Scerri, *The Periodic Table: A Very Short Introduction* (2ª ed. 2019)
+- Theodore Gray, *The Elements: A Visual Exploration of Every Known Atom in the Universe* (2009)
+- Hugh Aldersey-Williams, *Periodic Tales* (2011)
+
+**Online**
+- IUPAC — Periodic Table of Elements: https://iupac.org/what-we-do/periodic-table-of-elements/
+- Royal Society of Chemistry — Periodic Table: https://periodic-table.rsc.org/
+- PubChem (NIH) — Periodic Table: https://pubchem.ncbi.nlm.nih.gov/periodic-table/
+- Periodic Videos (Università di Nottingham): https://www.youtube.com/@periodicvideos
+- Theodore Gray — tavola periodica dei campioni reali: https://theodoregray.com/PeriodicTable/
+
+**Dalla stessa serie**: [Strata](https://simmonsstummer.github.io/strata/) — la scala del tempo geologico da esplorare ([sorgente](https://github.com/Simmonsstummer/strata)).
 
 ### Licenze
 

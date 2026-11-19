@@ -507,3 +507,9 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
   .helper{left:8px;right:62px;top:auto;width:auto;max-height:42vh;font-size:13px}
   .helper h3{font-size:17px}
 }
+
+/* learn more */
+.more{margin:0;padding-left:18px;font-size:14px;line-height:1.6}
+.more a{color:var(--accent);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent) 40%,transparent)}
+.card.strata{background:color-mix(in srgb,#67C5CA 12%,var(--surface2));border-color:color-mix(in srgb,#67C5CA 40%,transparent)}
+.card.strata a{color:var(--text);font-weight:700;text-decoration:none;border-bottom:1px solid var(--line2)}

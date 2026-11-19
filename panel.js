@@ -70,7 +70,8 @@ App.panel = (() => {
       <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
         <button class="btn" data-go="atom">⚛ ${t('p.seeAtom')}</button>
         <button class="btn" data-go="iso">${t('tab.iso')} (${e.iso.length})</button>
-        <button class="btn" data-go="history">${t('p.seeHistory')}</button></div>`;
+        <button class="btn" data-go="history">${t('p.seeHistory')}</button></div>
+      ${FURTHER.html(e)}`;
     $$('[data-go]', body).forEach(b => b.onclick = () => { cur.tab = b.dataset.go; render(); });
   }
 

@@ -2,7 +2,7 @@
 
 ## English
 
-The texts written for this project, in Italian and in English — stories of the discoveries, origins of the names, «where it is found», «what it is used for», fun facts, «you can find it in…» lists, molecule descriptions, photo captions and interface texts (the files in `tools/testi/`, the `tx` fields of `elements.json`, the strings in `i18n.js`, the guide in `help.js`, and the molecule texts in `tools/molecole.py` and in the `tx` fields of `molecules.json`) — are licensed under the
+The texts written for this project, in Italian and in English — stories of the discoveries, origins of the names, «where it is found», «what it is used for», fun facts, «you can find it in…» lists, molecule descriptions, photo captions and interface texts (the files in `tools/testi/`, the `tx` fields of `elements.json`, the strings in `i18n.js`, the guide in `help.js`, the «In Earth's history» notes in `further.js`, and the molecule texts in `tools/molecole.py` and in the `tx` fields of `molecules.json`) — are licensed under the
 **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
 
 © 2026 Simone Pompei
@@ -13,7 +13,7 @@ Full license: https://creativecommons.org/licenses/by/4.0/legalcode
 
 ## Italiano
 
-I testi scritti per questo progetto, in italiano e in inglese — storie delle scoperte, origine dei nomi, «dove si trova», «a cosa serve», curiosità, elenchi «Lo trovi in…», descrizioni delle molecole, didascalie delle foto e testi dell'interfaccia (i file in `tools/testi/`, i campi `tx` di `elements.json`, le stringhe di `i18n.js`, la guida in `help.js` e i testi delle molecole in `tools/molecole.py` e nei campi `tx` di `molecules.json`) — sono distribuiti con licenza
+I testi scritti per questo progetto, in italiano e in inglese — storie delle scoperte, origine dei nomi, «dove si trova», «a cosa serve», curiosità, elenchi «Lo trovi in…», descrizioni delle molecole, didascalie delle foto e testi dell'interfaccia (i file in `tools/testi/`, i campi `tx` di `elements.json`, le stringhe di `i18n.js`, la guida in `help.js`, le note «Nella storia della Terra» in `further.js` e i testi delle molecole in `tools/molecole.py` e nei campi `tx` di `molecules.json`) — sono distribuiti con licenza
 **Creative Commons Attribuzione 4.0 Internazionale (CC BY 4.0)**.
 
 © 2026 Simone Pompei

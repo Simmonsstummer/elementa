@@ -81,6 +81,7 @@
     $('#lang-btn').textContent = App.lang === 'it' ? 'EN' : 'IT';
     const R = 'https://github.com/Simmonsstummer/elementa', A = (u, x) => `<a href="${u}" target="_blank" rel="noopener">${x}</a>`;
     $('#foot').innerHTML = `<span class="long">Elementa · ${t('foot.open')}</span><span class="sep long">·</span>`
+      + `<span class="long">${t('foot.series')} ${A('https://simmonsstummer.github.io/strata/', 'Strata')}</span><span class="sep long">·</span>`
       + `<span>${t('foot.code')} ${A(R + '/blob/main/LICENSE', 'MIT')}</span><span class="sep">·</span>`
       + `<span>${t('foot.texts')} ${A(R + '/blob/main/LICENSE-CONTENT.md', 'CC BY 4.0')}</span><span class="sep">·</span>`
       + `<span>${A(R + '/blob/main/CREDITS.md', `<span class="long">${t('foot.photos')}</span><span class="short">${t('foot.credits')}</span>`)}</span><span class="sep">·</span>`
