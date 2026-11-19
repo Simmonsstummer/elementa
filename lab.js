@@ -166,6 +166,56 @@ App.lab = (() => {
     }
     changed();
   }
+  // an atom dragged from the palette and dropped on the bench; dropped on an atom with free hands, it bonds to it
+  function dropAtom(el, x, y, onto) {
+    if (S.atoms.length >= 48) { toast(t('lab.max')); return; }
+    snap();
+    const a = { id: S.next++, el, x, y }, o = onto && atom(onto);
+    if (o && canAdd(o.id)) {
+      if (Math.hypot(x - o.x, y - o.y) < 46) { const ang = freeAngle(o), L = el === 'H' || o.el === 'H' ? 52 : 64; a.x = o.x + Math.cos(ang) * L; a.y = o.y + Math.sin(ang) * L; }
+      keepIn(a); S.atoms.push(a); S.bonds.push({ a: o.id, b: a.id, o: 1 });
+      S.sel = canAdd(a.id) ? a.id : canAdd(o.id) ? o.id : null;
+    } else {
+      if (o) toast(t('lab.noHands', nm(App.E[ZOF[o.el] - 1])));
+      keepIn(a); S.atoms.push(a); S.sel = canAdd(a.id) ? a.id : null;
+    }
+    changed();
+  }
+  const svgPt = (cx, cy) => { const r = $('#lab-ws').getBoundingClientRect(); return { x: (cx - r.left) * svgSize.w / r.width, y: (cy - r.top) * svgSize.h / r.height, inside: cx >= r.left && cx <= r.right && cy >= r.top && cy <= r.bottom }; };
+  const atomNear = p => { let best = null, bd = 1e9; S.atoms.forEach(a => { const d = Math.hypot(a.x - p.x, a.y - p.y); if (d < RAD(a.el) + 14 && d < bd) { bd = d; best = a.id; } }); return best; };
+  let dropOn = null;
+  function wirePalette() {
+    $$('.lab-el', root).forEach(b => {
+      b.addEventListener('pointerdown', e => {
+        if (e.button > 0) return;
+        e.preventDefault();
+        const el = b.dataset.el, sx = e.clientX, sy = e.clientY; let ghost = null;
+        b.setPointerCapture(e.pointerId);
+        const move = ev => {
+          if (!ghost) {
+            if (Math.hypot(ev.clientX - sx, ev.clientY - sy) < 8) return;
+            ghost = document.createElement('div'); ghost.className = 'lab-ghost';
+            ghost.style.cssText = `--mc:${MCOL[el]};--mi:${molInk(el)};--gs:${RAD(el) * 2}px`; ghost.textContent = el;
+            document.body.appendChild(ghost);
+          }
+          ghost.style.transform = `translate(${ev.clientX}px,${ev.clientY}px)`;
+          const p = svgPt(ev.clientX, ev.clientY), on = p.inside ? atomNear(p) : null;
+          ghost.classList.toggle('out', !p.inside);
+          if (on !== dropOn) { dropOn = on; renderWs(); }
+        };
+        const up = ev => {
+          b.removeEventListener('pointermove', move); b.removeEventListener('pointerup', up); b.removeEventListener('pointercancel', cancel);
+          const on = dropOn; dropOn = null;
+          if (!ghost) { addAtom(el); return; }
+          ghost.remove(); const p = svgPt(ev.clientX, ev.clientY);
+          if (p.inside) dropAtom(el, p.x, p.y, on); else renderWs();
+        };
+        const cancel = () => { b.removeEventListener('pointermove', move); b.removeEventListener('pointerup', up); b.removeEventListener('pointercancel', cancel); if (ghost) ghost.remove(); dropOn = null; renderWs(); };
+        b.addEventListener('pointermove', move); b.addEventListener('pointerup', up); b.addEventListener('pointercancel', cancel);
+      });
+    });
+  }
+
   function tapAtom(id) {
     if (!S.sel) { S.sel = id; renderWs(); renderSide(); return; }
     if (S.sel === id) { S.sel = null; renderWs(); renderSide(); return; }
@@ -376,7 +426,7 @@ App.lab = (() => {
         <div class="lab-side" id="lab-side"></div>
       </div>`;
     $('#bk').onclick = () => App.game.hub();
-    $$('.lab-el', root).forEach(b => b.onclick = () => addAtom(b.dataset.el));
+    wirePalette();
     $('#lab-h').onclick = addHydrogens; $('#lab-undo').onclick = doUndo; $('#lab-clear').onclick = clearAll;
     wireWs(); fitWs(); changed();
   }
@@ -412,7 +462,7 @@ App.lab = (() => {
         }
         dots = angs.map(ang => `<circle class="hand" cx="${a.x + Math.cos(ang) * (r + 8)}" cy="${a.y + Math.sin(ang) * (r + 8)}" r="4.2"/>`).join('');
       }
-      s += `<g class="atom${S.sel === a.id ? ' sel' : ''}${ok ? ' ok' : ''}" data-a="${a.id}">${S.sel === a.id ? `<circle class="ring" cx="${a.x}" cy="${a.y}" r="${r + 7}"/>` : ''}${dots}
+      s += `<g class="atom${S.sel === a.id ? ' sel' : ''}${dropOn === a.id ? ' drop' : ''}${ok ? ' ok' : ''}" data-a="${a.id}">${S.sel === a.id || dropOn === a.id ? `<circle class="ring" cx="${a.x}" cy="${a.y}" r="${r + 7}"/>` : ''}${dots}
         <circle cx="${a.x}" cy="${a.y}" r="${r}" fill="url(#mg-${a.el})"/>${dz < -0.05 ? `<circle class="shade" cx="${a.x}" cy="${a.y}" r="${r}" fill-opacity="${(-dz * 0.9).toFixed(2)}"/>` : ''}<text x="${a.x}" y="${a.y + 1}" fill="${molInk(a.el)}" font-size="${(a.el.length > 1 ? 15 : 17) * (1 + dz * 0.4)}">${a.el}</text></g>`;
     });
     if (!S.atoms.length) s += `<text class="ws-empty" x="${svgSize.w / 2}" y="${svgSize.h / 2}">${t('lab.empty')}</text>`;

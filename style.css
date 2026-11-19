@@ -296,6 +296,12 @@ table.props td:last-child{font-family:var(--mono);font-size:12.5px}
 .lab-main{min-width:0}
 .lab-pal{display:grid;grid-template-columns:repeat(11,minmax(0,1fr));gap:6px;margin-bottom:10px}
 .lab-el{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0 5px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;transition:transform .12s,border-color .12s}
+.lab-el{touch-action:none;user-select:none;-webkit-user-select:none}
+.lab-ghost{position:fixed;left:0;top:0;z-index:80;pointer-events:none;width:var(--gs);height:var(--gs);margin:calc(var(--gs) / -2) 0 0 calc(var(--gs) / -2);border-radius:50%;
+  display:grid;place-items:center;font:700 16px var(--sans);color:var(--mi);box-shadow:0 8px 22px rgba(0,0,0,.45);
+  background:radial-gradient(circle at 35% 30%,color-mix(in srgb,var(--mc) 45%,#fff),var(--mc) 60%,color-mix(in srgb,var(--mc) 60%,#000))}
+.lab-ghost.out{opacity:.55}
+.lab-ws .atom.drop .ring{stroke:var(--good);fill:color-mix(in srgb,var(--good) 20%,transparent)}
 .lab-el:hover{border-color:var(--accent);transform:translateY(-2px)}
 .lab-el:active{transform:scale(.94)}
 .lab-el b{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;font-size:14px;color:var(--mi);
